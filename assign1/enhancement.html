@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Enhancements - Root Flower</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/mobile.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo-container" id="hero-section">
+                <a href="index.html"><img src="images/logo.jpg" alt="Root Flowerss Logo" class="img"></a>
+                <a href="index.html"><h1> Root Flower</h1></a>
+                <p class="tagline">Premium Florist in Kuching</p>
+            </div>
+            
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            
+            <label for="menu-toggle" class="hamburger" aria-label="Toggle menu">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </label>
+            
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li class="dropdown">
+                    <a href="#">Products</a>
+                    <ul class="dropdown-menu"></ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Activities</a>
+                    <ul class="dropdown-menu"></ul>
+                </li>
+                <li><a href="register.html">Workshop Registration</a></li>
+                <li><a href="enquiry.html">Enquiry</a></li>
+                <li><a href="profile.html">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>CSS Enhancements</h1>
+            <p>Showcasing advanced CSS techniques implemented throughout the Root Flower website</p>
+        </div>
+
+        <!-- Enhancement 1: Dropdown Menu -->
+        <section id="dropdown" class="enhancement-section">
+            <div class="enhancement-container">
+                <div class="enhancement-content">
+                    <h2>1. Dropdown Navigation Menu</h2>
+                    
+                    <div class="enhancement-demo">
+                        <h3>Live Demo</h3>
+                        <div class="demo-nav">
+                            <article>
+                                <ul class="nav-menu">
+                                    <li class="dropdown">
+                                        <a href="#">Products</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="product1.html">Hand Bouquets</a></li>
+                                            <li><a href="product2.html">CNY Decorations</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#">Activities</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="workshop.html">Workshops</a></li>
+                                            <li><a href="promotion.html">Promotions</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </article>
+                        </div>
+                    </div>
+
+                    <div class="enhancement-info">
+                        <h4>Featured in:</h4>
+                        <p><a href="#">Navigation Bar (All Pages)</a></p>
+
+                        <h4>Technical Details:</h4>
+                        <p>The dropdown menu is implemented using pure CSS with a nested unordered list structure. The submenu utilizes absolute positioning relative to its parent list item. Visibility is controlled through opacity and transform properties, creating a smooth fade-in and slide-down animation effect. The :hover pseudo-class triggers the visibility change, while the dropdown-menu maintains its position below the parent item using top: 100%. Transition properties ensure smooth animation with a duration of 0.3 seconds using an ease timing function. The implementation includes proper z-index management to ensure the dropdown appears above other page elements.</p>
+
+                        <h4>Reference:</h4>
+                        <p><a href="#">CSS Dropdown Tutorial</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Enhancement 2: Flippable Cards -->
+        <section id="flippable" class="enhancement-section">
+            <div class="enhancement-container">
+                <div class="enhancement-content">
+                    <h2>2. 3D Flip Cards</h2>
+                    
+                    <div class="enhancement-demo">
+                        <h3>Live Demo</h3>
+                        <div class="demo-cards">
+                            <div class="workshop-item">
+                                <div class="workshop-card">
+                                    <div class="workshop-card-front">
+                                        <div class="workshop-image">
+                                            <img src="images/Workshop 1.jpg" alt="Flower Workshop">
+                                        </div>
+                                        <div class="workshop-content">
+                                            <h4>Beginner's Floral Workshop</h4>
+                                            <p class="workshop-description">Learn the basics of flower arrangement</p>
+                                        </div>
+                                    </div>
+                                    <div class="workshop-card-back">
+                                        <h4>Workshop Details</h4>
+                                        <div class="workshop-details">
+                                            <div class="workshop-detail-item">
+                                                <h5>Duration</h5>
+                                                <p>2 hours hands-on session</p>
+                                            </div>
+                                            <div class="workshop-detail-item">
+                                                <h5>What You'll Learn</h5>
+                                                <p>Basic techniques and design principles</p>
+                                            </div>
+                                            <div class="workshop-detail-item workshop-price">
+                                                <p>RM 150 per person</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="enhancement-info">
+                        <h4>Featured in:</h4>
+                        <p><a href="workshop.html">Workshop Page</a></p>
+
+                        <h4>Technical Details:</h4>
+                        <p>The flip card effect utilizes CSS 3D transforms with the transform-style: preserve-3d property applied to the card container. Both card faces are absolutely positioned with backface-visibility: hidden to prevent the back face from showing through during rotation. The front face has a rotateY(0deg) transform, while the back face is pre-rotated to rotateY(180deg). On hover, the parent container rotates 180 degrees on the Y-axis using rotateY(180deg), revealing the back face. The transition uses a cubic-bezier timing function (0.175, 0.885, 0.32, 1.275) for a smooth, slightly elastic animation over 0.8 seconds. The card maintains a perspective value of 1000px on the parent element to create the 3D depth effect.</p>
+
+                        <h4>Reference:</h4>
+                        <p><a href="https://codepen.io/edeesims/pen/wvpYWW" target="_blank">CSS 3D Transforms Guide</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Enhancement 3: CSS-Only Lightbox -->
+        <section id="lightbox" class="enhancement-section">
+            <div class="enhancement-container">
+                <div class="enhancement-content">
+                    <h2>3. CSS-Only Image Lightbox</h2>
+                    
+                    <div class="enhancement-demo">
+                        <h3>Live Demo</h3>
+                        <p class="demo-instruction">Click on the image below to open the lightbox</p>
+                        <div class="demo-lightbox">
+                            <label for="demo-lightbox-1">
+                                <img src="images/Hand bouquet 1.jpg" alt="Flower Arrangement" class="clickable-image" style="max-width: 300px; border-radius: 10px; cursor: pointer;">
+                            </label>
+                            <input type="checkbox" id="demo-lightbox-1" class="lightbox-toggle">
+                            <div class="lightbox-overlay">
+                                <div class="lightbox-content">
+                                    <label for="demo-lightbox-1" class="lightbox-close">&times;</label>
+                                    <img src="images/Hand bouquet 1.jpg" alt="Flower Arrangement">
+                                    <div class="lightbox-caption">Beautiful Flower Arrangement</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="enhancement-info">
+                        <h4>Featured in:</h4>
+                        <p><a href="product2.html">Product Gallery</a></p>
+
+                        <h4>Technical Details:</h4>
+                        <p>The lightbox implementation uses a hidden checkbox input combined with the CSS :checked pseudo-class to control visibility without JavaScript. The checkbox is styled with display: none, while a label wrapping the thumbnail image serves as the clickable trigger. When checked, the sibling selector (+) targets the lightbox overlay, changing its opacity from 0 to 1 and visibility from hidden to visible. The overlay uses position: fixed with full viewport dimensions (width: 100%, height: 100%) and a high z-index of 9999 to appear above all content. The lightbox content is centered using flexbox properties (justify-content: center, align-items: center) on the overlay. A scale transform creates a zoom-in effect, transitioning from scale(0.8) to scale(1). The close button is implemented as another label that unchecks the checkbox when clicked, reversing all transitions.</p>
+
+                        <h4>Reference:</h4>
+                        <p><a href="https://codepen.io/gschier/pen/kyRXVx" target="_blank">Pure CSS Lightbox Tutorial</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Enhancement 4: Hover Effects -->
+        <section id="hover" class="enhancement-section">
+            <div class="enhancement-container">
+                <div class="enhancement-content">
+                    <h2>4. Advanced Hover Effects</h2>
+                    
+                    <div class="enhancement-demo">
+                        <h3>Live Demo</h3>
+                        <div class="demo-hover">
+                            <div class="news-link">
+                                <article class="news-item">
+                                    <h3>Spring Collection Launch</h3>
+                                    <p>Discover our beautiful new spring flower arrangements featuring fresh seasonal blooms.</p>
+                                </article>
+                            </div>
+                            
+                            <div class="collection-item">
+                                <img src="images/Workshop demo.jpg" alt="Sample Product">
+                                <h4>Premium Bouquet</h4>
+                                <p>Beautiful handcrafted arrangement</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="enhancement-info">
+                        <h4>Featured in:</h4>
+                        <p><a href="index.html">Homepage News Section</a>, <a href="product1.html">Product Gallery</a>, <a href="promotion.html">Promotion Page</a>, <a href="#">Navigation Menu</a></p>
+
+                        <h4>Technical Details:</h4>
+                        <p>Multiple hover effects are implemented throughout the website using CSS transitions and transforms. The news items feature a translateX transform that slides content horizontally by 10px with a pseudo-element arrow that fades in using opacity transitions. Product cards implement a translateY(-5px) transform combined with box-shadow modifications to create a lifting effect. The navigation menu uses background-color changes with rgba values for subtle transparency effects. All hover states utilize transition properties with durations ranging from 0.3 to 0.4 seconds and ease timing functions. Transform-origin properties are carefully set to ensure smooth scaling and translation effects from appropriate anchor points.</p>
+
+                        <h4>Reference:</h4>
+                        <p><a href="https://www.w3schools.com/cssref/sel_hover.php" target="_blank">CSS Hover Effects Collection</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Enhancement 5: Responsive Hamburger Menu -->
+        <section id="hamburger-demo" class="enhancement-section">
+            <div class="enhancement-container">
+                <div class="enhancement-content">
+                    <h2>5. Responsive Hamburger Menu</h2>
+                    
+                    <div class="enhancement-demo">
+                        <h3>Live Demo</h3>
+                        <p class="demo-instruction">Resize your browser window to see the hamburger menu in action, or view on mobile device.</p>
+                        <div class="demo-hamburger">
+                            <div class="mobile-nav-demo">
+                                <p class="demo-label">Click the hamburger icon ↗</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="enhancement-info">
+                        <h4>Featured in:</h4>
+                        <p><a href="#">Navigation Bar (All Pages - Mobile View)</a></p>
+
+                        <h4>Technical Details:</h4>
+                        <p>The responsive hamburger menu is built using a checkbox input combined with CSS sibling selectors and transforms. The checkbox is visually hidden using display: none, while a label element styled as three horizontal lines serves as the clickable trigger. When the checkbox is checked (using the :checked pseudo-class), adjacent sibling selectors (~) target both the hamburger icon and the navigation menu. The top and bottom lines of the hamburger rotate using rotate(45deg) and rotate(-45deg) transforms respectively, combined with translateY to form an X shape. The middle line fades out using opacity: 0. Media queries detect viewport width and adjust the navigation layout accordingly, switching from horizontal flex layout to a vertical mobile-friendly layout at defined breakpoints.</p>
+
+                        <h4>Reference:</h4>
+                        <p><a href="https://codepen.io/erikterwan/pen/EVzeRP" target="_blank">Responsive Hamburger Fold Out Menu</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Enhancement 6: Sticky Navigation Bar -->
+        <section id="sticky-nav" class="enhancement-section">
+            <div class="enhancement-container">
+                <div class="enhancement-content">
+                    <h2>Sticky Navigation Bar</h2>
+                    
+                    <div class="enhancement-demo">
+                        <h3>Live Demo</h3>
+                        <p class="demo-instruction">Try scrolling up and down this page to see the sticky navigation bar in action!</p>
+                        <div class="demo-hamburger">
+                            <div class="mobile-nav-demo">
+                                <p class="demo-label">Sticky navigation bar at the top ↑</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="enhancement-info">
+                        <h4>Featured in:</h4>
+                        <p><a href="#">Navigation Bar (All Pages)</a></p>
+
+                        <h4>Technical Details:</h4>
+                        <p>The sticky navigation is implemented using CSS position: sticky with top: 0 on the header element. This positioning method allows the navigation bar to scroll normally with the page content until it reaches the top of the viewport, at which point it remains fixed in place. The implementation includes a z-index property to ensure the navigation stays above other page content while scrolling. A subtle box-shadow is applied to create depth separation from the underlying content. The sticky behavior is combined with a smooth background transition that can enhance visibility when the navbar becomes fixed. This CSS-only solution provides better performance compared to JavaScript-based scroll detection methods, as it leverages native browser capabilities for scroll handling.</p>
+
+                        <h4>Reference:</h4>
+                        <p><a href="https://www.w3schools.com/howto/howto_css_sticky_element.asp" target="_blank">CSS Sticky Positioning</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Pages</h3>
+                <ul>
+                    <li><a href="product1.html">Hand Bouquets</a></li>
+                    <li><a href="product2.html">CNY Decorations</a></li>
+                    <li><a href="workshop.html">Workshops</a></li>
+                    <li><a href="promotion.html">Promotions</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <ul>
+                    <li><a href="register.html">Workshop Registration</a></li>
+                    <li><a href="enquiry.html">Enquiry Form</a></li>
+                    <li><a href="https://api.whatsapp.com/send?phone=60143399709" target="_blank">WhatsApp</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Developer</h3>
+                <ul>
+                    <li><a href="mailto:104386144@students.swinburne.edu.my">104386144@students.swinburne.edu.my</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Enhancements</h3>
+                <ul>
+                    <li><a href="enhancement.html">CSS Enhancements</a></li>
+                    <li><a href="enhancement2.html">JS Enhancements</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                &copy; 2025 Root Flower. All rights reserved.
+            </div>
+            
+            <div class="footer-clock">
+                <div class="clock-date" id="clock-date">Loading...</div>
+                <div class="clock-time" id="clock-time">00:00:00</div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

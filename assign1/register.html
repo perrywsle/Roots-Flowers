@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop Registration - Root Flower</title> 
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/mobile.css">
+    <script src="scripts/script.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo-container" id="hero-section">
+                <a href="index.html"><img src="images/logo.jpg" alt="Root Flowerss Logo" class="img"></a>
+                <a href="index.html"><h1> Root Flower</h1></a>
+                <p class="tagline">Premium Florist in Kuching</p>
+            </div>
+            
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            
+            <label for="menu-toggle" class="hamburger" aria-label="Toggle menu">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </label>
+            
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li class="dropdown">
+                    <a href="#">Products</a>
+                    <ul class="dropdown-menu"></ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Activities</a>
+                    <ul class="dropdown-menu"></ul>
+                </li>
+                <li><a href="register.html">Workshop Registration</a></li>
+                <li><a href="enquiry.html">Enquiry</a></li>
+                <li><a href="profile.html">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="form-container">
+            <div class="page-header" id="register-page-header">
+                <h1>Workshop Registration</h1>
+                <p>Register for our exciting floral arrangement workshops</p>
+            </div>
+            
+            <form action="#" method="post" id="registration-form" novalidate>
+                <h2>Personal Information</h2>
+                
+                <div class="form-group">
+                    <label for="firstName">First Name *</label>
+                    <input type="text" id="firstName" name="firstName" maxlength="25" required>
+                    <div class="form-error" id="firstName-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Last Name *</label>
+                    <input type="text" id="lastName" name="lastName" maxlength="25" required>
+                    <div class="form-error" id="lastName-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="text" id="email" name="email" required>
+                    <div class="form-error" id="email-error"></div>
+                </div>
+
+                <fieldset>
+                    <legend>Address Information</legend>
+                    
+                    <div class="form-group">
+                        <label for="streetAddress">Street Address *</label>
+                        <input type="text" id="streetAddress" name="streetAddress" maxlength="40" required>
+                        <div class="form-error" id="streetAddress-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="city">City/Town *</label>
+                        <input type="text" id="city" name="city" maxlength="20" required>
+                        <div class="form-error" id="city-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="state">State *</label>
+                        <select id="state" name="state" required>
+                            <option value="">Select State</option>
+                        </select>
+                        <div class="form-error" id="state-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="postcode">Postcode *</label>
+                        <input type="text" id="postcode" name="postcode" maxlength="5" required>
+                        <div class="form-error" id="postcode-error"></div>
+                    </div>
+                </fieldset>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="text" id="phone" name="phone" maxlength="10" 
+                           placeholder="e.g., 0123456789" required>
+                    <div class="form-error" id="phone-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="workshopDate">Preferred Workshop Date *</label>
+                    <input type="date" id="workshopDate" name="workshopDate" placeholder="e.g. YYYY-MM-DD" required>
+                    <div class="form-error" id="workshopDate-error"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="participants">Number of Participants *</label>
+                    <input type="text" id="participants" name="participants" maxlength="2" 
+                           placeholder="e.g., 2" required>
+                    <div class="form-error" id="participants-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="workshopType">Workshop Type Preference *</label>
+                    <select id="workshopType" name="workshopType">
+                        <option value="">Select Workshop Type</option>
+                    </select>
+                    <div class="form-error" id="workshopType-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="experienceLevel">Experience Level *</label>
+                    <select id="experienceLevel" name="experienceLevel">
+                        <option value="">Select Experience Level</option>
+                    </select>
+                    <div class="form-error" id="experienceLevel-error"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="workshopSubject">Subject</label>
+                    <input type="text" id="workshopSubject" name="workshopSubject">
+                    <div class="form-error" id="workshopSubject-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="comments">Comments or Special Requests</label>
+                    <textarea id="comments" name="comments" rows="6" cols="50" 
+                              placeholder="Please share any specific requirements, dietary restrictions for refreshments, or questions about the workshop..."></textarea>
+                    <div class="form-error" id="comments-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <input type="checkbox" id="newsletter" name="newsletter">
+                    <label class="newsletter">Subscribe to our newsletter for more updates and promotions</label>
+                </div>
+
+                <div class="form-group">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label class="terms">I agree to the terms and conditions *</label>
+                    <div class="form-error" id="terms-error"></div>
+                </div>
+
+                <div class="form-group right-btn">
+                    <button type="submit" class="btn btn-submit">Submit Registration</button>
+                    <button type="reset" class="btn btn-clear">Clear Form</button>
+                </div>
+            </form>
+            
+            <div id="reg-confirmation-box" class="confirmation-container">
+                <div class="page-header">
+                    <h2>Please Confirm Your Registration</h2>
+                </div>
+                
+                <div id="reg-confirmation-details">
+                    <p><strong>Name:</strong> <span id="reg-conf-name"></span></p>
+                    <p><strong>Email:</strong> <span id="reg-conf-email"></span></p>
+                    <p><strong>Phone:</strong> <span id="reg-conf-phone"></span></p>
+                    <p><strong>Address:</strong> <span id="reg-conf-address"></span></p>
+                    <p><strong>Workshop:</strong> <span id="reg-conf-workshop"></span></p>
+                    <p><strong>Subject:</strong> <span id="reg-conf-subject"></span></p>
+                    <p><strong>Date:</strong> <span id="reg-conf-date"></span></p>
+                    <p><strong>Participants:</strong> <span id="reg-conf-participants"></span></p>
+                    <p><strong>Comments:</strong></p>
+                    <blockquote id="reg-conf-comments"></blockquote>
+                </div>
+                
+                <div class="form-group right-btn">
+                    <button type="button" id="reg-edit-btn" class="btn btn-clear">Go Back</button>
+                    <button type="button" id="reg-confirm-btn" class="btn btn-submit">Confirm Registration</button>
+                </div>
+            </div>
+            </div>
+
+            <button type="button" id="floating-enquiry-btn" class="btn-float" 
+                data-enquiry-type="workshop" 
+                data-enquiry-subject="RE: Enquiry on Workshop Registration">
+                ?
+            </button>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Pages</h3>
+                <ul>
+                    <li><a href="product1.html">Hand Bouquets</a></li>
+                    <li><a href="product2.html">CNY Decorations</a></li>
+                    <li><a href="workshop.html">Workshops</a></li>
+                    <li><a href="promotion.html">Promotions</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <ul>
+                    <li><a href="register.html">Workshop Registration</a></li>
+                    <li><a href="enquiry.html">Enquiry Form</a></li>
+                    <li><a href="https://api.whatsapp.com/send?phone=60143399709" target="_blank">WhatsApp</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Developer</h3>
+                <ul>
+                    <li><a href="mailto:104386144@students.swinburne.edu.my">104386144@students.swinburne.edu.my</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Enhancements</h3>
+                <ul>
+                    <li><a href="enhancement.html">CSS Enhancements</a></li>
+                    <li><a href="enhancement2.html">JS Enhancements</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                &copy; 2025 Root Flower. All rights reserved.
+            </div>
+            
+            <div class="footer-clock">
+                <div class="clock-date" id="clock-date">Loading...</div>
+                <div class="clock-time" id="clock-time">00:00:00</div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

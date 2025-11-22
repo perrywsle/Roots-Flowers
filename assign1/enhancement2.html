@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Enhancements - Root Flower</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/mobile.css">
+    <script src="scripts/script.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo-container"> 
+                <a href="index.html"><img src="images/logo.jpg" alt="Root Flowerss Logo" class="img"></a>
+                <a href="index.html"><h1> Root Flower</h1></a>
+                <p class="tagline">Premium Florist in Kuching</p>
+            </div>
+            
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            
+            <label for="menu-toggle" class="hamburger" aria-label="Toggle menu">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </label>
+            
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li class="dropdown">
+                    <a href="#">Products</a>
+                    <ul class="dropdown-menu"></ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Activities</a>
+                    <ul class="dropdown-menu"></ul>
+                </li>
+                <li><a href="register.html">Workshop Registration</a></li>
+                <li><a href="enquiry.html">Enquiry</a></li>
+                <li><a href="profile.html">About Me</a></li>
+                <li><a href="enhancement2.html">JS Enhancements</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="page-header" id="top-section">
+        <h1>JavaScript Enhancements</h1>
+        <p>Interactive features and dynamic functionality implemented throughout the Root Flower website</p>
+    </div>
+
+    <aside class="sidebar-nav">
+        <nav class="section-nav">
+          <a href="#top-section" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-text">Top</span>
+          </a>
+          <a href="#slideshow" class="nav-item">
+            <span class="nav-icon">📰</span>
+            <span class="nav-text">Slideshow</span>
+          </a>
+          <a href="#active-nav" class="nav-item">
+            <span class="nav-icon">🌸</span>
+            <span class="nav-text">Active Nav</span>
+          </a>
+          <a href="#autofill" class="nav-item">
+            <span class="nav-icon">📅</span>
+            <span class="nav-text">Forms</span>
+          </a>
+          <a href="#sidebar-logic" class="nav-item">
+            <span class="nav-icon">💬</span>
+            <span class="nav-text">Sidebar</span>
+          </a>
+        </nav>
+    </aside>
+
+    <main>
+        <section id="slideshow" class="enhancement-section">
+            <div class="enhancement-container">
+                <div class="enhancement-content">
+                    <h2>1. Hero Section Slideshow Animation</h2>
+                    
+                    <div class="enhancement-demo">
+                        <h3>Live Demo</h3>
+                        <p class="demo-instruction">This is the *actual* hero slideshow, built by the main `script.js`. It auto-plays, has navigation, and tooltips on the buttons.</p>
+                        
+                        <section class="hero-section demo-hero-container"></section>
+                    </div>
+
+                    <div class="enhancement-info">
+                        <h4>Featured in:</h4>
+                        <p><a href="index.html">Homepage Hero Section</a></p>
+
+                        <h4>Technical Details:</h4>
+                        <p>The slideshow is dynamically created using JavaScript with an array of slide data objects. Each slide contains an image, title, text, button text, and link. The script creates DOM elements for the slides container, individual slides with overlay content, arrow navigation buttons, and indicator dots. The slideshow automatically advances every 5 seconds using setInterval(). Users can manually navigate using arrow buttons or click indicator dots to jump to specific slides. The active slide is tracked using a currentSlide variable, and the showSlide() function updates the active class on both slides and indicators. Mouse hover pauses the auto-advance to improve user experience. The implementation includes resetInterval() to restart the timer after manual navigation, ensuring consistent timing.</p>
+
+                        <h4>Key JavaScript Functions:</h4>
+                        <div class="code-block">// Create slideshow from data array
+                            slidesData.forEach((slideData, index) => {
+                                const slide = document.createElement('div');
+                                slide.className = 'slide';
+                                if (index === 0) slide.classList.add('active');
+                                slide.innerHTML = `&lt;img src="${slideData.image}"&gt;...`;
+                                slidesContainer.appendChild(slide);
+                            });
+
+                            // Auto-advance slides
+                            function startSlideshow() {
+                                slideInterval = setInterval(nextSlide, 5000);
+                            }
+
+                            // Navigate slides
+                            function nextSlide() {
+                                currentSlide = (currentSlide + 1) % slides.length;
+                                showSlide(currentSlide);
+                            }
+                        </div>
+
+                        <h4>Reference:</h4>
+                        <p><a href="https://www.w3schools.com/howto/howto_js_slideshow.asp" target="_blank">JavaScript Slideshow Tutorial</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="active-nav" class="enhancement-section">
+            <div class="enhancement-container">
+                <div class="enhancement-content">
+                    <h2>2. Active Page Navigation Highlighting</h2>
+                    
+                    <div class="enhancement-demo">
+                        <h3>Live Demo</h3>
+                        <p class="demo-instruction">Look at the main navigation bar above. The "JS Enhancements" link is highlighted because `script.js` has identified this as the current page.</p>
+                    </div>
+
+                    <div class="enhancement-info">
+                        <h4>Featured in:</h4>
+                        <p><a href="#">Navigation Bar (All Pages)</a></p>
+
+                        <h4>Technical Details:</h4>
+                        <p>The active navigation link highlighting is achieved by extracting the current page filename from window.location.pathname using split('/').pop(). The script then queries all navigation links and compares each link's href attribute with the current page. When a match is found, the 'active' class is added to that link. For dropdown menu items, the script not only highlights the active link but also finds its parent dropdown and adds the 'active' class to the parent link as well. This provides visual feedback across both the main navigation and dropdown submenus. The implementation uses forEach() to iterate through all links and closest() to traverse up the DOM tree to find parent elements.</p>
+
+                        <h4>Key JavaScript Functions:</h4>
+                        <div class="code-block">// Get current page filename
+                            const currentPage = window.location.pathname.split('/').pop();
+
+                            // Highlight main nav links
+                            const navLinks = document.querySelectorAll('.nav-menu > li > a');
+                            navLinks.forEach(link => {
+                                if (link.getAttribute('href') === currentPage) {
+                                    link.classList.add('active');
+                                }
+                            });
+
+                            // Highlight dropdown links and parent
+                            const dropdownLinks = document.querySelectorAll('.dropdown-menu li a');
+                            dropdownLinks.forEach(link => {
+                                if (link.getAttribute('href') === currentPage) {
+                                    link.classList.add('active');
+                                    const parentLink = link.closest('.dropdown').querySelector('a');
+                                    if (parentLink) parentLink.classList.add('active');
+                                }
+                            });
+                        </div>
+
+                        <h4>Reference:</h4>
+                        <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Location" target="_blank">MDN - Location API</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="autofill" class="enhancement-section">
+            <div class="enhancement-container">
+                <div class="enhancement-content">
+                    <h2>3. Live Form Features (Autofill, Type-ahead, Validation & Confirmation)</h2>
+                    
+                    <div class="enhancement-demo">
+                        <h3>Live Demo</h3>
+                        <p class="demo-instruction">This is the *actual* registration form. The main `script.js` has attached all listeners to it. Try it out:</p>
+                        <ul class="demo-feature-list">
+                            <li><b>(Enh. 3) Auto-fill:</b> Click a workshop button (on the <a href="workshop.html" target="_blank">Workshop page</a>), then come here. The "Workshop Type" and "Subject" fields will be pre-filled.</li>
+                            <li><b>(Enh. 4) Type-ahead:</b> Try filtering the "State," "Experience Level," or "Workshop Type" dropdowns by typing.</li>
+                            <li><b>(Enh. 5) Validation:</b> Type in the fields. You'll see real-time validation with inline error messages.</li>
+                            <li><b>(Enh. 6) Confirmation:</b> Fill the form correctly and click "Register". A confirmation screen will appear.</li>
+                        </ul>
+                        
+                        <div class="form-container demo-form-container">
+                            <form id="registration-form" novalidate>
+                                <fieldset>
+                                    <legend>Personal Information</legend>
+                                    <div class="form-group">
+                                        <label for="firstName">First Name *</label>
+                                        <input type="text" id="firstName" name="firstName" maxlength="25" required>
+                                        <div class="form-error" id="firstName-error"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastName">Last Name *</label>
+                                        <input type="text" id="lastName" name="lastName" maxlength="25" required>
+                                        <div class="form-error" id="lastName-error"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Email *</label>
+                                        <input type="text" id="email" name="email" required>
+                                        <div class="form-error" id="email-error"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="phone">Phone (10 digits) *</label>
+                                        <input type="text" id="phone" name="phone" maxlength="10" placeholder="e.g., 0123456789" required>
+                                        <div class="form-error" id="phone-error"></div>
+                                    </div>
+                                </fieldset>
+                        
+                                <fieldset>
+                                    <legend>Address</legend>
+                                    <div class="form-group">
+                                        <label for="streetAddress">Street Address *</label>
+                                        <input type="text" id="streetAddress" name="streetAddress" maxlength="40" required>
+                                        <div class="form-error" id="streetAddress-error"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="city">City *</label>
+                                        <input type="text" id="city" name="city" maxlength="20" required>
+                                        <div class="form-error" id="city-error"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="state">State * (Type-ahead Demo)</label>
+                                        <select id="state" name="state" required>
+                                            <option value="">Select State</option>
+                                        </select>
+                                        <div class="form-error" id="state-error"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="postcode">Postcode (5 digits) *</label>
+                                        <input type="text" id="postcode" name="postcode" maxlength="5" required>
+                                        <div class="form-error" id="postcode-error"></div>
+                                    </div>
+                                </fieldset>
+                        
+                                <fieldset>
+                                    <legend>Workshop Details</legend>
+                                    <div class="form-group">
+                                        <label for="workshopType">Workshop Type * (Type-ahead Demo)</label>
+                                        <select id="workshopType" name="workshopType" required>
+                                            <option value="">Select Workshop Type</option>
+                                        </select>
+                                        <div class="form-error" id="workshopType-error"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="workshopSubject">Subject (Auto-fills from Workshop Type)</label>
+                                        <input type="text" id="workshopSubject" name="workshopSubject">
+                                        <div class="form-error" id="workshopSubject-error"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="workshopDate">Preferred Workshop Date *</label>
+                                        <input type="date" id="workshopDate" name="workshopDate" placeholder="e.g. YYYY-MM-DD" required>
+                                        <div class="form-error" id="workshopDate-error"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="participants">Number of Participants *</label>
+                                        <input type="text" id="participants" name="participants" maxlength="2" placeholder="e.g., 2" required>
+                                        <div class="form-error" id="participants-error"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="experienceLevel">Experience Level (Type-ahead Demo)</label>
+                                        <select id="experienceLevel" name="experienceLevel">
+                                            <option value="">Select Level</option>
+                                        </select>
+                                        <div class="form-error" id="experienceLevel-error"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="comments">Comments (Optional)</label>
+                                        <textarea id="comments" name="comments" rows="6" cols="50" placeholder="Please share any specific requirements..."></textarea>
+                                        <div class="form-error" id="comments-error"></div>
+                                    </div>
+                                </fieldset>
+                        
+                                <div class="form-group">
+                                    <input type="checkbox" id="terms" name="terms" required>
+                                    <label for="terms" class="terms">I agree to the terms and conditions *</label>
+                                    <div class="form-error" id="terms-error"></div>
+                                </div>
+                        
+                                <div class="form-group center-submit">
+                                    <button type="submit" class="btn btn-submit">Submit Registration</button>
+                                </div>
+                            </form>
+                        
+                            <div id="reg-confirmation-box" class="confirmation-container">
+                                <h2>Confirm Your Registration</h2>
+                                <div id="reg-confirmation-details">
+                                    <p><strong>Name:</strong> <span id="reg-conf-name"></span></p>
+                                    <p><strong>Email:</strong> <span id="reg-conf-email"></span></p>
+                                    <p><strong>Phone:</strong> <span id="reg-conf-phone"></span></p>
+                                    <p><strong>Address:</strong> <span id="reg-conf-address"></span></p>
+                                    <p><strong>Workshop:</strong> <span id="reg-conf-workshop"></span></p>
+                                    <p><strong>Subject:</strong> <span id="reg-conf-subject"></span></p>
+                                    <p><strong>Date:</strong> <span id="reg-conf-date"></span></p>
+                                    <p><strong>Participants:</strong> <span id="reg-conf-participants"></span></p>
+                                    <p><strong>Comments:</strong> <span id="reg-conf-comments"></span></p>
+                                </div>
+                                <div class="form-group right-btn">
+                                    <button type="button" id="reg-edit-btn" class="btn btn-clear">Edit</button>
+                                    <button type="button" id="reg-confirm-btn" class="btn btn-submit">Confirm Registration</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="enhancement-info">
+                        <h4>Featured in:</h4>
+                        <p><a href="register.html">Workshop Registration Page</a>, <a href="enquiry.html">Enquiry Page</a></p>
+
+                        <h4>Technical Details:</h4>
+                        <p>
+                            <b>Auto-fill (Enh. 3):</b> Uses `sessionStorage` to pass data between pages. Click listeners on workshop buttons store `workshopSubject` and `workshopValue`. The registration form script checks for these on load, populates the fields, and clears the storage.
+                        </p>
+                        <p>
+                            <b>Type-ahead (Enh. 4):</b> A `makeDropdownSearchable()` function transforms `select` elements. It creates a text input and a custom dropdown list, hiding the original select. An `input` listener filters options, and a `blur` listener intelligently auto-selects the best match.
+                        </p>
+                        <p>
+                            <b>Validation (Enh. 5):</b> A `validateField()` function uses RegExp patterns to test inputs on-the-fly via `input` listeners. It adds/removes `is-valid`/`is-invalid` classes and updates inline error message divs.
+                        </p>
+                        <p>
+                            <b>Confirmation (Enh. 6):</b> The form's `submit` event is intercepted. If validation passes, `event.preventDefault()` stops submission, the form is hidden, and a confirmation `div` is shown. Data is copied from form fields to `span` elements for review.
+                        </p>
+
+                        <h4>Key JavaScript Functions:</h4>
+                        <div class="code-block">// Store data (workshop.html)
+                            sessionStorage.setItem('workshopSubject', subject);
+                            sessionStorage.setItem('workshopValue', value);
+
+                            // Retrieve data (register.html)
+                            const regValue = sessionStorage.getItem('workshopValue');
+                            if (regValue && workshopType) {
+                                workshopType.value = regValue;
+                            }
+
+                            // Type-ahead logic
+                            function makeDropdownSearchable(selectElement) {
+                                searchInput.addEventListener('input', (e) => {
+                                    const filtered = allOptions.filter(option => ...);
+                                    renderOptions(filtered);
+                                });
+                            }
+
+                            // Validation logic
+                            const namePattern = /^[A-Za-z\s]{1,25}$/;
+                            fname.addEventListener('input', () => 
+                                validateField(fname, namePattern, 'First name')
+                            );
+
+                            // Confirmation logic
+                            registrationForm.addEventListener('submit', function(event) {
+                                event.preventDefault();
+                                if (errors.length === 0) {
+                                    document.getElementById('reg-conf-name').textContent = ...;
+                                    registrationForm.style.display = 'none';
+                                    confirmationBox.style.display = 'block';
+                                }
+                            });
+                        </div>
+
+                        <h4>Reference:</h4>
+                        <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage" target="_blank">MDN - sessionStorage</a>, <a href="https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation" target="_blank">MDN - Form Validation</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sidebar-logic" class="enhancement-section">
+            <div class="enhancement-container">
+                <div class="enhancement-content">
+                    <h2>7. Smart Auto-hiding Sidebar Navigation</h2>
+                    <div class="enhancement-demo">
+                        <h3>How It Works</h3>
+                        <p class="demo-instruction">Scroll up and down this page. The sidebar (on the right) will fade out when you are in the Hero Slideshow area (Enhancement 1) and reappear when you scroll past it.</p>
+                        
+                        <div class="behavior-demo-box">
+                            <h4>Sidebar Behavior:</h4>
+                            <ul class="behavior-list-items">
+                                <li><strong>Initially:</strong> Sidebar is visible for 3 seconds</li>
+                                <li><strong>In Hero Section:</strong> Sidebar fades out after 3 seconds</li>
+                                <li><strong>Below Hero:</strong> Sidebar reappears and stays visible</li>
+                                <li><strong>Return to Hero:</strong> Sidebar hides again</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="enhancement-info">
+                        <h4>Featured in:</h4>
+                        <p><a href="index.html">Homepage</a> (and replicated here)</p>
+
+                        <h4>Technical Details:</h4>
+                        <p>The auto-hiding sidebar uses scroll event detection combined with element positioning calculations. A boolean flag hasShownInitially tracks whether the user has scrolled past the initial load. The checkSidebarVisibility() function calculates the hero section's bottom position using offsetTop + offsetHeight, and compares it with the current scroll position (window.scrollY + window.innerHeight / 2). Initially, the sidebar is visible. After 3 seconds (using setTimeout), the flag is set to true. If the user scrolls back to the hero section after seeing the sidebar, it fades out using opacity: 0 and pointer-events: none to prevent interaction. When scrolling below the hero section, the sidebar fades back in with opacity: 1 and pointer-events: auto. This creates an unobtrusive user experience where the sidebar doesn't clutter the hero content but remains accessible throughout the rest of the page. The transition is smooth thanks to CSS transitions on the opacity property.</p>
+
+                        <h4>Key JavaScript Functions:</h4>
+                        <div class="code-block">const sidebarNav = document.querySelector('.sidebar-nav');
+                            const heroSectionEl = document.querySelector('.hero-section');
+                            let hasShownInitially = false;
+
+                            function checkSidebarVisibility() {
+                                const heroBottom = heroSectionEl.offsetTop + 
+                                                heroSectionEl.offsetHeight;
+                                const scrollPosition = window.scrollY + 
+                                                    window.innerHeight / 2;
+                                
+                                // Mark as shown after scrolling
+                                if (window.scrollY > 50) {
+                                    hasShownInitially = true;
+                                }
+                                
+                                if (scrollPosition < heroBottom && hasShownInitially) {
+                                    // In hero section after being shown - hide
+                                    sidebarNav.style.opacity = '0';
+                                    sidebarNav.style.pointerEvents = 'none';
+                                } else {
+                                    // Outside hero or initial view - show
+                                    sidebarNav.style.opacity = '1';
+                                    sidebarNav.style.pointerEvents = 'auto';
+                                }
+                            }
+
+                            // Show initially for 3 seconds
+                            setTimeout(() => {
+                                hasShownInitially = true;
+                                checkSidebarVisibility();
+                            }, 3000);
+
+                            // Check on scroll
+                            window.addEventListener('scroll', checkSidebarVisibility);
+                        </div>
+
+                        <h4>Reference:</h4>
+                        <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect" target="_blank">MDN - Element Positioning</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="clock" class="enhancement-section">
+            <div class="enhancement-container">
+                <div class="enhancement-content">
+                    <h2>3. Real-Time JavaScript Clock</h2>
+
+                    <div class="enhancement-demo">
+                        <h3>Live Demo</h3>
+                        <p class="demo-instruction">This is a live clock powered by the same logic that runs the clock in the website footer. It updates every second.</p>
+
+                        <div class="demo-clock">
+                            <span id="demo-clock-date">Loading date...</span>
+                            <span id="demo-clock-time">00:00:00</span>
+                        </div>
+                    </div>
+
+                    <div class="enhancement-info">
+                        <h4>Featured in:</h4>
+                        <p><a href="index.html">Site Footer (All Pages)</a></p>
+
+                        <h4>Technical Details:</h4>
+                        <p>This feature uses JavaScript's built-in <code>new Date()</code> object to get the current date and time. A function <code>updateClock()</code> is called once on page load and then registered with <code>setInterval(updateClock, 1000)</code> to run every second. Inside this function, the <code>Date</code> object is formatted into strings using <code>toLocaleDateString()</code> (with 'en-MY' locale for Malaysian date format) and string manipulation (<code>padStart</code>) for the time. The script then finds the designated DOM elements by their IDs and updates their <code>textContent</code>.</p>
+
+                        <h4>Key JavaScript Functions:</h4>
+                        <div class="code-block">// Main clock function
+                            function updateClock() {
+                                const now = new Date();
+
+                                // Format date
+                                const dateOptions = { ... };
+                                const dateString = now.toLocaleDateString('en-MY', dateOptions);
+
+                                // Format time
+                                const hours = String(now.getHours()).padStart(2, '0');
+                                ...
+                                const timeString = `${hours}:${minutes}:${seconds}`;
+
+                                // Update DOM
+                                dateElement.textContent = dateString;
+                                timeElement.textContent = timeString;
+                            }
+
+                            // Initialize
+                            updateClock();
+                            setInterval(updateClock, 1000);
+                        </div>
+
+                        <h4>Reference:</h4>
+                        <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/setInterval" target="_blank">MDN - setInterval</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">MDN - Date object</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Pages</h3>
+                <ul>
+                    <li><a href="product1.html">Hand Bouquets</a></li>
+                    <li><a href="product2.html">CNY Decorations</a></li>
+                    <li><a href="workshop.html">Workshops</a></li>
+                    <li><a href="promotion.html">Promotions</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <ul>
+                    <li><a href="register.html">Workshop Registration</a></li>
+                    <li><a href="enquiry.html">Enquiry Form</a></li>
+                    <li><a href="https://api.whatsapp.com/send?phone=60143399709" target="_blank">WhatsApp</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Developer</h3>
+                <ul>
+                    <li><a href="mailto:104386144@students.swinburne.edu.my">104386144@students.swinburne.edu.my</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Enhancements</h3>
+                <ul>
+                    <li><a href="enhancement.html">CSS Enhancements</a></li>
+                    <li><a href="enhancement2.html">JS Enhancements</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                &copy; 2025 Root Flower. All rights reserved.
+            </div>
+            
+            <div class="footer-clock">
+                <div class="clock-date" id="clock-date">Loading...</div>
+                <div class="clock-time" id="clock-time">00:00:00</div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
