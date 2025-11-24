@@ -452,6 +452,8 @@
         right: 15px;
         width: 3.5em;
         height: 3.5em;
+        min-width: 44px;
+        min-height: 44px;
     }
 
     .acknowledgement-container {
@@ -463,15 +465,106 @@
         margin-top: 2.5rem;
     }
 
+    /* Reference table - card style layout at 768px */
+    .reference-table {
+        display: block;
+        overflow-x: visible;
+    }
+    
+    .reference-table thead {
+        display: none;
+    }
 
-    .reference-table th {
-        padding: 1rem;
-        font-size: 1.1rem;
+    .reference-table tbody {
+        display: block;
+    }
+
+    .reference-table tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid rgba(44, 85, 48, 0.2);
+        border-radius: 8px;
+        background: white;
+        overflow: hidden;
     }
 
     .reference-table td {
+        display: block;
+        text-align: left;
         padding: 0.9rem 1rem;
         font-size: 1rem;
+        border-bottom: 1px solid rgba(44, 85, 48, 0.1);
+    }
+
+    .reference-table td:last-child {
+        border-bottom: none;
+    }
+
+    .reference-table td:before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #2c5530;
+        display: block;
+        margin-bottom: 0.3rem;
+    }
+
+    .reference-table tbody tr:hover {
+        background-color: rgba(74, 124, 89, 0.05);
+    }
+
+    /* Data table - responsive card layout at 768px */
+    .data-table {
+        display: block;
+        overflow-x: visible;
+        font-size: 1rem;
+    }
+
+    .data-table thead {
+        display: none;
+    }
+
+    .data-table tbody {
+        display: block;
+    }
+
+    .data-table tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid rgba(44, 85, 48, 0.2);
+        border-radius: 8px;
+        background: white;
+        overflow: hidden;
+    }
+
+    .data-table td {
+        display: block;
+        text-align: left;
+        padding: 0.9rem 1rem;
+        font-size: 1rem;
+        border-bottom: 1px solid rgba(44, 85, 48, 0.1);
+        position: relative;
+        padding-left: 50%;
+    }
+
+    .data-table td:last-child {
+        border-bottom: none;
+    }
+
+    .data-table td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 45%;
+        padding-left: 1rem;
+        font-weight: bold;
+        color: #2c5530;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .data-table tbody tr:hover {
+        background-color: rgba(74, 124, 89, 0.05);
     }
 
     .sidebar-nav {
@@ -490,6 +583,31 @@
     .img {
         height: 2.8rem;
         width: 2.8rem;
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    /* Touch target improvements */
+    .arrow,
+    .gallery-arrow,
+    .lightbox-close,
+    .hamburger,
+    button,
+    .btn,
+    a {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    /* Long text handling */
+    .data-table td,
+    .reference-table td,
+    .form-group input,
+    .form-group textarea,
+    .news-item,
+    .collection-item p {
+        word-break: break-word;
+        overflow-wrap: break-word;
     }
     
     .page-header h1 {
@@ -535,6 +653,8 @@
         padding: 0.5rem;
         width: 50px;
         height: 50px;
+        min-width: 44px;
+        min-height: 44px;
     }
     
     .arrow.left,
@@ -819,6 +939,30 @@
     .btn {
         font-size: 1rem;
         padding: 0.8rem 1.6rem;
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    /* Ensure all button types have proper mobile styles */
+    .btn-submit,
+    .btn-reset,
+    .btn-clear,
+    .btn-register,
+    .btn-view,
+    .btn-order,
+    .btn-contact,
+    button[type="submit"],
+    button[type="reset"] {
+        font-size: 1rem;
+        padding: 0.8rem 1.6rem;
+        min-width: 44px;
+        min-height: 44px;
+        transition: all 0.3s ease;
+    }
+
+    .center-btn {
+        text-align: center;
+        margin: 1.5rem 0;
     }
     
     .wrap {
@@ -859,10 +1003,89 @@
         padding: 1rem;
     }
 
+    /* Footer mobile improvements */
     footer,
     .site-footer {
         font-size: 0.95rem;
         padding: 1.8rem;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .footer-clock {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Lightbox mobile improvements */
+    .lightbox-close {
+        font-size: 2.5rem;
+        top: -50px;
+        right: 10px;
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0.5rem;
+    }
+
+    .lightbox-caption {
+        font-size: 1.05rem;
+        bottom: -60px;
+        padding: 1rem;
+    }
+
+    /* Form error messages mobile */
+    .form-error {
+        font-size: 0.85rem;
+        margin-top: 0.3rem;
+        display: block;
+    }
+
+    /* Profile table mobile improvements */
+    .profile-table {
+        display: block;
+    }
+
+    .profile-table tbody,
+    .profile-table tr,
+    .profile-table th,
+    .profile-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .profile-table th {
+        background: linear-gradient(135deg, #2c5530, #4a7c59);
+        color: white;
+        padding: 1rem;
+        font-size: 1.15rem;
+        text-align: left;
+    }
+
+    .profile-table td {
+        padding: 1rem;
+        font-size: 0.95rem;
+        border-bottom: 1px solid rgba(44, 85, 48, 0.1);
+    }
+
+    .profile-table tr {
+        margin-bottom: 0.5rem;
+        border: 1px solid rgba(44, 85, 48, 0.2);
+        border-radius: 8px;
+        overflow: hidden;
     }
 
     .enhancement-content h2 {
@@ -910,19 +1133,7 @@
         font-size: 1.05rem;
     }
 
-    .data-table {
-        font-size: 0.7rem;
-        display: block;
-    }
-    
-    .data-table thead th,
-    .data-table tbody td {
-        padding: 0.8rem 0.5rem;
-    }
-    
-    .data-table thead th {
-        font-size: 0.7rem;
-    }
+    /* Remove redundant data-table styles - moved to 768px breakpoint */
 }
 
 /* ==============================================
@@ -1227,11 +1438,7 @@
         border-radius: 10px;
     }
     
-    .data-table thead th,
-    .data-table tbody td {
-        padding: 0.6rem 0.4rem;
-        font-size: 0.8rem;
-    }
+    /* Data table and reference table already styled at 768px */
         
     .collection-item {
         padding: 1rem;
@@ -1278,12 +1485,20 @@
     button[type="submit"] {
         padding: 0.8rem 1.5rem;
         font-size: 0.9rem;
+        min-width: 44px;
+        min-height: 44px;
     }
 
     .btn-reset,
     button[type="reset"] {
         padding: 0.8rem 1.5rem;
         font-size: 0.9rem;
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .center-btn {
+        margin: 1rem 0;
     }
     
     /* Profile page small mobile */
@@ -1313,6 +1528,38 @@
         font-size: 0.9rem;
     }
 
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+    }
+
+    /* Stack date and time vertically on very small screens */
+    .footer-clock {
+        flex-direction: column;
+        gap: 0.3rem;
+        align-items: center;
+        padding: 0.7rem 1rem;
+    }
+
+    .clock-date {
+        font-size: 0.7rem;
+    }
+
+    .clock-time {
+        font-size: 0.9rem;
+    }
+
     .acknowledgement-container {
         padding: 2rem 1rem;
     }
@@ -1336,37 +1583,7 @@
         font-size: 0.9rem;
     }
 
-    /* Stack table cells vertically on very small screens */
-    .reference-table thead {
-        display: none;
-    }
-
-    .reference-table tr {
-        display: block;
-        margin-bottom: 1rem;
-        border: 1px solid rgba(44, 85, 48, 0.2);
-        border-radius: 8px;
-        overflow: hidden;
-    }
-
-    .reference-table td {
-        display: block;
-        text-align: left;
-        padding: 0.8rem;
-        border-bottom: 1px solid rgba(44, 85, 48, 0.1);
-    }
-
-    .reference-table td:before {
-        content: attr(data-label);
-        font-weight: bold;
-        color: #2c5530;
-        display: block;
-        margin-bottom: 0.3rem;
-    }
-
-    .reference-table tbody tr:hover {
-        background-color: transparent;
-    }
+    /* Reference table already has card layout from 768px breakpoint */
 }
 
 /* ==============================================
