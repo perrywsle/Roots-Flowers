@@ -1054,24 +1054,6 @@
         display: block;
     }
 
-    /* Button improvements */
-    .btn,
-    .btn-submit,
-    .btn-clear,
-    .btn-register,
-    .btn-view,
-    .btn-order,
-    .btn-contact {
-        min-width: 44px;
-        min-height: 44px;
-        padding: 0.8rem 1.6rem;
-    }
-
-    .center-btn {
-        margin-top: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-
     /* Profile table mobile improvements */
     .profile-table {
         display: block;
