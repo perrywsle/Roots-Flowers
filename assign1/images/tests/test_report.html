@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selenium Test Report - Root Flower</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px 40px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card h3 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card p {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .test-group {
+            margin-bottom: 50px;
+        }
+        
+        .test-group h2 {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+        }
+        
+        .test-group h2::before {
+            content: '✓';
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background: #28a745;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            margin-right: 15px;
+            font-size: 0.8em;
+        }
+        
+        .screenshot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .screenshot-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .screenshot-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .screenshot-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+            cursor: pointer;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .screenshot-card .info {
+            padding: 15px;
+        }
+        
+        .screenshot-card h4 {
+            color: #333;
+            font-size: 1em;
+            margin-bottom: 8px;
+            word-break: break-word;
+        }
+        
+        .screenshot-card .meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            color: #6c757d;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #e7f3ff;
+            color: #004085;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            color: #6c757d;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        /* Modal for full-size images */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal img {
+            max-width: 90%;
+            max-height: 90%;
+            box-shadow: 0 0 50px rgba(255,255,255,0.3);
+        }
+        
+        .modal:target {
+            display: flex;
+        }
+        
+        .close {
+            position: absolute;
+            top: 30px;
+            right: 50px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .screenshot-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Selenium Test Report</h1>
+            <p>Root Flower - Premium Florist Website</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">Generated: 11/24/2025, 9:35:55 PM</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <h3>39</h3>
+                <p>Total Screenshots</p>
+            </div>
+            <div class="stat-card">
+                <h3>5</h3>
+                <p>Test Categories</p>
+            </div>
+            <div class="stat-card">
+                <h3>✓</h3>
+                <p>All Tests Passed</p>
+            </div>
+            <div class="stat-card">
+                <h3>11/24/2025</h3>
+                <p>Test Date</p>
+            </div>
+        </div>
+        
+        <div class="content">
+
+            <div class="test-group">
+                <h2>Homepage</h2>
+                <div class="screenshot-grid">
+
+                    <div class="screenshot-card">
+                        <a href="#img-Homepage-0">
+                            <img src="screenshots/homepage_initial.png" alt="homepage initial">
+                        </a>
+                        <div class="info">
+                            <h4>homepage initial</h4>
+                            <div class="meta">
+                                <span class="badge">875.37 KB</span>
+                                <span>homepage_initial.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Homepage-0" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/homepage_initial.png" alt="homepage initial">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-Homepage-1">
+                            <img src="screenshots/homepage_scrolled.png" alt="homepage scrolled">
+                        </a>
+                        <div class="info">
+                            <h4>homepage scrolled</h4>
+                            <div class="meta">
+                                <span class="badge">539.34 KB</span>
+                                <span>homepage_scrolled.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Homepage-1" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/homepage_scrolled.png" alt="homepage scrolled">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="test-group">
+                <h2>Navigation</h2>
+                <div class="screenshot-grid">
+
+                    <div class="screenshot-card">
+                        <a href="#img-Navigation-0">
+                            <img src="screenshots/acknowledgement.png" alt="acknowledgement">
+                        </a>
+                        <div class="info">
+                            <h4>acknowledgement</h4>
+                            <div class="meta">
+                                <span class="badge">175.67 KB</span>
+                                <span>acknowledgement.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Navigation-0" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/acknowledgement.png" alt="acknowledgement">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-Navigation-1">
+                            <img src="screenshots/enhancement.png" alt="enhancement">
+                        </a>
+                        <div class="info">
+                            <h4>enhancement</h4>
+                            <div class="meta">
+                                <span class="badge">214.17 KB</span>
+                                <span>enhancement.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Navigation-1" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/enhancement.png" alt="enhancement">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-Navigation-2">
+                            <img src="screenshots/enhancement2.png" alt="enhancement2">
+                        </a>
+                        <div class="info">
+                            <h4>enhancement2</h4>
+                            <div class="meta">
+                                <span class="badge">368.41 KB</span>
+                                <span>enhancement2.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Navigation-2" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/enhancement2.png" alt="enhancement2">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-Navigation-3">
+                            <img src="screenshots/enquiry.png" alt="enquiry">
+                        </a>
+                        <div class="info">
+                            <h4>enquiry</h4>
+                            <div class="meta">
+                                <span class="badge">100.00 KB</span>
+                                <span>enquiry.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Navigation-3" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/enquiry.png" alt="enquiry">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-Navigation-4">
+                            <img src="screenshots/index.png" alt="index">
+                        </a>
+                        <div class="info">
+                            <h4>index</h4>
+                            <div class="meta">
+                                <span class="badge">931.75 KB</span>
+                                <span>index.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Navigation-4" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/index.png" alt="index">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-Navigation-5">
+                            <img src="screenshots/product1.png" alt="product1">
+                        </a>
+                        <div class="info">
+                            <h4>product1</h4>
+                            <div class="meta">
+                                <span class="badge">488.06 KB</span>
+                                <span>product1.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Navigation-5" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/product1.png" alt="product1">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-Navigation-6">
+                            <img src="screenshots/product2.png" alt="product2">
+                        </a>
+                        <div class="info">
+                            <h4>product2</h4>
+                            <div class="meta">
+                                <span class="badge">407.17 KB</span>
+                                <span>product2.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Navigation-6" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/product2.png" alt="product2">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-Navigation-7">
+                            <img src="screenshots/profile.png" alt="profile">
+                        </a>
+                        <div class="info">
+                            <h4>profile</h4>
+                            <div class="meta">
+                                <span class="badge">145.57 KB</span>
+                                <span>profile.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Navigation-7" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/profile.png" alt="profile">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-Navigation-8">
+                            <img src="screenshots/promotion.png" alt="promotion">
+                        </a>
+                        <div class="info">
+                            <h4>promotion</h4>
+                            <div class="meta">
+                                <span class="badge">336.84 KB</span>
+                                <span>promotion.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Navigation-8" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/promotion.png" alt="promotion">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-Navigation-9">
+                            <img src="screenshots/register.png" alt="register">
+                        </a>
+                        <div class="info">
+                            <h4>register</h4>
+                            <div class="meta">
+                                <span class="badge">114.16 KB</span>
+                                <span>register.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Navigation-9" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/register.png" alt="register">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-Navigation-10">
+                            <img src="screenshots/workshop.png" alt="workshop">
+                        </a>
+                        <div class="info">
+                            <h4>workshop</h4>
+                            <div class="meta">
+                                <span class="badge">405.68 KB</span>
+                                <span>workshop.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Navigation-10" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/workshop.png" alt="workshop">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="test-group">
+                <h2>Enquiry Form</h2>
+                <div class="screenshot-grid">
+
+                    <div class="screenshot-card">
+                        <a href="#img-Enquiry Form-0">
+                            <img src="screenshots/enquiry_after_reset.png" alt="enquiry after reset">
+                        </a>
+                        <div class="info">
+                            <h4>enquiry after reset</h4>
+                            <div class="meta">
+                                <span class="badge">77.36 KB</span>
+                                <span>enquiry_after_reset.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Enquiry Form-0" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/enquiry_after_reset.png" alt="enquiry after reset">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-Enquiry Form-1">
+                            <img src="screenshots/enquiry_after_submit.png" alt="enquiry after submit">
+                        </a>
+                        <div class="info">
+                            <h4>enquiry after submit</h4>
+                            <div class="meta">
+                                <span class="badge">87.18 KB</span>
+                                <span>enquiry_after_submit.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Enquiry Form-1" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/enquiry_after_submit.png" alt="enquiry after submit">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-Enquiry Form-2">
+                            <img src="screenshots/enquiry_before_reset.png" alt="enquiry before reset">
+                        </a>
+                        <div class="info">
+                            <h4>enquiry before reset</h4>
+                            <div class="meta">
+                                <span class="badge">101.92 KB</span>
+                                <span>enquiry_before_reset.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Enquiry Form-2" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/enquiry_before_reset.png" alt="enquiry before reset">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-Enquiry Form-3">
+                            <img src="screenshots/enquiry_completely_filled.png" alt="enquiry completely filled">
+                        </a>
+                        <div class="info">
+                            <h4>enquiry completely filled</h4>
+                            <div class="meta">
+                                <span class="badge">82.49 KB</span>
+                                <span>enquiry_completely_filled.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Enquiry Form-3" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/enquiry_completely_filled.png" alt="enquiry completely filled">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-Enquiry Form-4">
+                            <img src="screenshots/enquiry_enhanced_initial.png" alt="enquiry enhanced initial">
+                        </a>
+                        <div class="info">
+                            <h4>enquiry enhanced initial</h4>
+                            <div class="meta">
+                                <span class="badge">100.00 KB</span>
+                                <span>enquiry_enhanced_initial.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Enquiry Form-4" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/enquiry_enhanced_initial.png" alt="enquiry enhanced initial">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-Enquiry Form-5">
+                            <img src="screenshots/enquiry_filled.png" alt="enquiry filled">
+                        </a>
+                        <div class="info">
+                            <h4>enquiry filled</h4>
+                            <div class="meta">
+                                <span class="badge">60.55 KB</span>
+                                <span>enquiry_filled.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Enquiry Form-5" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/enquiry_filled.png" alt="enquiry filled">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-Enquiry Form-6">
+                            <img src="screenshots/enquiry_html5_validation.png" alt="enquiry html5 validation">
+                        </a>
+                        <div class="info">
+                            <h4>enquiry html5 validation</h4>
+                            <div class="meta">
+                                <span class="badge">84.96 KB</span>
+                                <span>enquiry_html5_validation.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Enquiry Form-6" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/enquiry_html5_validation.png" alt="enquiry html5 validation">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-Enquiry Form-7">
+                            <img src="screenshots/enquiry_initial.png" alt="enquiry initial">
+                        </a>
+                        <div class="info">
+                            <h4>enquiry initial</h4>
+                            <div class="meta">
+                                <span class="badge">100.00 KB</span>
+                                <span>enquiry_initial.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Enquiry Form-7" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/enquiry_initial.png" alt="enquiry initial">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-Enquiry Form-8">
+                            <img src="screenshots/enquiry_with_textarea.png" alt="enquiry with textarea">
+                        </a>
+                        <div class="info">
+                            <h4>enquiry with textarea</h4>
+                            <div class="meta">
+                                <span class="badge">59.74 KB</span>
+                                <span>enquiry_with_textarea.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-Enquiry Form-8" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/enquiry_with_textarea.png" alt="enquiry with textarea">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="test-group">
+                <h2>JavaScript Tests</h2>
+                <div class="screenshot-grid">
+
+                    <div class="screenshot-card">
+                        <a href="#img-JavaScript Tests-0">
+                            <img src="screenshots/js_after_reset.png" alt="js after reset">
+                        </a>
+                        <div class="info">
+                            <h4>js after reset</h4>
+                            <div class="meta">
+                                <span class="badge">96.95 KB</span>
+                                <span>js_after_reset.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-JavaScript Tests-0" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/js_after_reset.png" alt="js after reset">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-JavaScript Tests-1">
+                            <img src="screenshots/js_before_reset.png" alt="js before reset">
+                        </a>
+                        <div class="info">
+                            <h4>js before reset</h4>
+                            <div class="meta">
+                                <span class="badge">120.62 KB</span>
+                                <span>js_before_reset.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-JavaScript Tests-1" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/js_before_reset.png" alt="js before reset">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-JavaScript Tests-2">
+                            <img src="screenshots/js_before_submit_click.png" alt="js before submit click">
+                        </a>
+                        <div class="info">
+                            <h4>js before submit click</h4>
+                            <div class="meta">
+                                <span class="badge">91.04 KB</span>
+                                <span>js_before_submit_click.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-JavaScript Tests-2" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/js_before_submit_click.png" alt="js before submit click">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-JavaScript Tests-3">
+                            <img src="screenshots/js_button_1_after.png" alt="js button 1 after">
+                        </a>
+                        <div class="info">
+                            <h4>js button 1 after</h4>
+                            <div class="meta">
+                                <span class="badge">96.73 KB</span>
+                                <span>js_button_1_after.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-JavaScript Tests-3" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/js_button_1_after.png" alt="js button 1 after">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-JavaScript Tests-4">
+                            <img src="screenshots/js_button_1_before.png" alt="js button 1 before">
+                        </a>
+                        <div class="info">
+                            <h4>js button 1 before</h4>
+                            <div class="meta">
+                                <span class="badge">96.89 KB</span>
+                                <span>js_button_1_before.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-JavaScript Tests-4" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/js_button_1_before.png" alt="js button 1 before">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-JavaScript Tests-5">
+                            <img src="screenshots/js_button_2_after.png" alt="js button 2 after">
+                        </a>
+                        <div class="info">
+                            <h4>js button 2 after</h4>
+                            <div class="meta">
+                                <span class="badge">94.42 KB</span>
+                                <span>js_button_2_after.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-JavaScript Tests-5" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/js_button_2_after.png" alt="js button 2 after">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-JavaScript Tests-6">
+                            <img src="screenshots/js_button_2_before.png" alt="js button 2 before">
+                        </a>
+                        <div class="info">
+                            <h4>js button 2 before</h4>
+                            <div class="meta">
+                                <span class="badge">96.73 KB</span>
+                                <span>js_button_2_before.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-JavaScript Tests-6" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/js_button_2_before.png" alt="js button 2 before">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-JavaScript Tests-7">
+                            <img src="screenshots/js_button_3_after.png" alt="js button 3 after">
+                        </a>
+                        <div class="info">
+                            <h4>js button 3 after</h4>
+                            <div class="meta">
+                                <span class="badge">100.00 KB</span>
+                                <span>js_button_3_after.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-JavaScript Tests-7" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/js_button_3_after.png" alt="js button 3 after">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-JavaScript Tests-8">
+                            <img src="screenshots/js_button_3_before.png" alt="js button 3 before">
+                        </a>
+                        <div class="info">
+                            <h4>js button 3 before</h4>
+                            <div class="meta">
+                                <span class="badge">117.70 KB</span>
+                                <span>js_button_3_before.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-JavaScript Tests-8" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/js_button_3_before.png" alt="js button 3 before">
+                    </div>
+
+                    <div class="screenshot-card">
+                        <a href="#img-JavaScript Tests-9">
+                            <img src="screenshots/js_html5_validation.png" alt="js html5 validation">
+                        </a>
+                        <div class="info">
+                            <h4>js html5 validation</h4>
+                            <div class="meta">
+                                <span class="badge">94.15 KB</span>
+                                <span>js_html5_validation.png</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="img-JavaScript Tests-9" class="modal">
+                        <a href="#" class="close">&times;</a>
+                        <img src="screenshots/js_html5_validation.png" alt="js html5 validation">
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="footer">
+            <p><strong>Test Environment:</strong> Selenium WebDriver with Chrome</p>
+            <p><strong>Repository:</strong> perrywsle/Roots-Flowers</p>
+            <p><strong>Tester:</strong> perrywsle</p>
+            <p style="margin-top: 15px; font-size: 0.9em;">
+                Generated automatically by Selenium test suite<br>
+                © 2025 Root Flower - All tests completed successfully
+            </p>
+        </div>
+    </div>
+</body>
+</html>

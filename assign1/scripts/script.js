@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     if (config.dynamic) {
                         if (this.classList.contains('cta-button')) {
                             tooltipText = this.textContent.includes('Shop') ? 'Browse our flower gallery' :
-                                         this.textContent.includes('Explore') ? 'View hand bouquets' :
+                                         this.textContent.includes('Explore') ? 'View workshop details' :
                                          this.textContent.includes('View') ? 'See festive decorations' :
                                          'Click to explore';
                         } else if (this.classList.contains('btn-register')) {
