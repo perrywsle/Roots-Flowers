@@ -313,6 +313,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             { selector: '#register-now-sidebar', text: 'Register for our workshops' },
             { selector: '.btn-register', dynamic: true }, // Workshop cards (dynamic)
             { selector: '.btn-submit', text: 'Submit your form' },
+            { selector: '.btn-email', text: 'Email me' },
             { selector: '.btn-clear', text: 'Clear all fields' },
             { selector: '#edit-btn', text: 'Go back and edit' },
             { selector: '#confirm-btn', text: 'Confirm and submit' },
