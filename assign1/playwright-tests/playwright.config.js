@@ -1,4 +1,4 @@
-const { defineConfig, devices } = require('@playwright/test');
+const { defineConfig } = require('@playwright/test');
 
 module.exports = defineConfig({
   testDir: './tests',
@@ -23,11 +23,25 @@ module.exports = defineConfig({
   projects: [
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'], headless: false, viewport: null }
+      use: { 
+        browserName: 'firefox',
+        headless: false, 
+        viewport: null,
+        launchOptions: {
+          args: ['--start-maximized']
+        }
+      }
     },
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'], headless: false, viewport: null }
+      use: { 
+        browserName: 'chromium',
+        headless: false, 
+        viewport: null,
+        launchOptions: {
+          args: ['--start-maximized']
+        }
+      }
     }
   ]
 });
