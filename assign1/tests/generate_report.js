@@ -1,344 +1,158 @@
+/**
+ * Cross-platform test report generator
+ * - Finds images in ./screenshots (relative to this file)
+ * - Produces test_report.html next to this script
+ * - Safe on Windows and Linux (handles spaces, backslashes)
+ *
+ * Usage:
+ *   node generate_report.js
+ */
+
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 
-function generateReport() {
-    const screenshotsDir = 'screenshots';
-    
-    if (!fs.existsSync(screenshotsDir)) {
-        console.log('No screenshots directory found!');
-        return;
-    }
-    
-    const screenshots = fs.readdirSync(screenshotsDir)
-        .filter(f => f.endsWith('.png'))
-        .sort();
-    
-    // Group screenshots by test
-    const testGroups = {
-        'Homepage': screenshots.filter(s => s.startsWith('homepage_')),
-        'Navigation': screenshots.filter(s => s.startsWith('index.') || s.startsWith('product') || 
-                                                s.startsWith('enquiry.') || s.startsWith('register.') ||
-                                                s.startsWith('profile.') || s.startsWith('enhancement') ||
-                                                s.startsWith('promotion.') || s.startsWith('workshop.') ||
-                                                s.startsWith('acknowledgement.')),
-        'Registration Form': screenshots.filter(s => s.startsWith('register_') && !s.includes('.')),
-        'Enquiry Form': screenshots.filter(s => s.startsWith('enquiry_')),
-        'JavaScript Tests': screenshots.filter(s => s.startsWith('js_'))
-    };
-    
-    const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selenium Test Report - Root Flower</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
-            text-align: center;
-        }
-        
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
-        
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 30px 40px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #dee2e6;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .stat-card h3 {
-            color: #667eea;
-            font-size: 2em;
-            margin-bottom: 5px;
-        }
-        
-        .stat-card p {
-            color: #6c757d;
-            font-size: 0.9em;
-        }
-        
-        .content {
-            padding: 40px;
-        }
-        
-        .test-group {
-            margin-bottom: 50px;
-        }
-        
-        .test-group h2 {
-            color: #333;
-            font-size: 1.8em;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #667eea;
-            display: flex;
-            align-items: center;
-        }
-        
-        .test-group h2::before {
-            content: '✓';
-            display: inline-block;
-            width: 35px;
-            height: 35px;
-            background: #28a745;
-            color: white;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 35px;
-            margin-right: 15px;
-            font-size: 0.8em;
-        }
-        
-        .screenshot-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
-        }
-        
-        .screenshot-card {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .screenshot-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        }
-        
-        .screenshot-card img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            display: block;
-            cursor: pointer;
-            border-bottom: 3px solid #667eea;
-        }
-        
-        .screenshot-card .info {
-            padding: 15px;
-        }
-        
-        .screenshot-card h4 {
-            color: #333;
-            font-size: 1em;
-            margin-bottom: 8px;
-            word-break: break-word;
-        }
-        
-        .screenshot-card .meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85em;
-            color: #6c757d;
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            background: #e7f3ff;
-            color: #004085;
-            border-radius: 12px;
-            font-size: 0.8em;
-            font-weight: 500;
-        }
-        
-        .footer {
-            background: #f8f9fa;
-            padding: 30px;
-            text-align: center;
-            color: #6c757d;
-            border-top: 1px solid #dee2e6;
-        }
-        
-        /* Modal for full-size images */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal img {
-            max-width: 90%;
-            max-height: 90%;
-            box-shadow: 0 0 50px rgba(255,255,255,0.3);
-        }
-        
-        .modal:target {
-            display: flex;
-        }
-        
-        .close {
-            position: absolute;
-            top: 30px;
-            right: 50px;
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        @media (max-width: 768px) {
-            .screenshot-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .header h1 {
-                font-size: 1.8em;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🧪 Selenium Test Report</h1>
-            <p>Root Flower - Premium Florist Website</p>
-            <p style="font-size: 0.9em; margin-top: 10px;">Generated: ${new Date().toLocaleString()}</p>
-        </div>
-        
-        <div class="stats">
-            <div class="stat-card">
-                <h3>${screenshots.length}</h3>
-                <p>Total Screenshots</p>
-            </div>
-            <div class="stat-card">
-                <h3>${Object.keys(testGroups).length}</h3>
-                <p>Test Categories</p>
-            </div>
-            <div class="stat-card">
-                <h3>✓</h3>
-                <p>All Tests Passed</p>
-            </div>
-            <div class="stat-card">
-                <h3>${new Date().toLocaleDateString()}</h3>
-                <p>Test Date</p>
-            </div>
-        </div>
-        
-        <div class="content">
-`;
+const SCRIPT_DIR = __dirname;
+const SCREENSHOTS_DIR = path.resolve(SCRIPT_DIR, 'screenshots');
+const OUT_FILE = path.resolve(SCRIPT_DIR, 'test_report.html');
 
-    let htmlContent = html;
-    
-    // Add each test group
-    Object.entries(testGroups).forEach(([groupName, images]) => {
-        if (images.length > 0) {
-            htmlContent += `
-            <div class="test-group">
-                <h2>${groupName}</h2>
-                <div class="screenshot-grid">
-`;
-            
-            images.forEach((img, index) => {
-                const imgPath = `${screenshotsDir}/${img}`;
-                const stats = fs.statSync(imgPath);
-                const fileSize = (stats.size / 1024).toFixed(2);
-                const fileName = img.replace('.png', '').replace(/_/g, ' ');
-                
-                htmlContent += `
-                    <div class="screenshot-card">
-                        <a href="#img-${groupName}-${index}">
-                            <img src="${imgPath}" alt="${fileName}">
-                        </a>
-                        <div class="info">
-                            <h4>${fileName}</h4>
-                            <div class="meta">
-                                <span class="badge">${fileSize} KB</span>
-                                <span>${img}</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="img-${groupName}-${index}" class="modal">
-                        <a href="#" class="close">&times;</a>
-                        <img src="${imgPath}" alt="${fileName}">
-                    </div>
-`;
-            });
-            
-            htmlContent += `
-                </div>
-            </div>
-`;
-        }
-    });
-    
-    htmlContent += `
-        </div>
-        
-        <div class="footer">
-            <p><strong>Test Environment:</strong> Selenium WebDriver with Chrome</p>
-            <p><strong>Repository:</strong> perrywsle/Roots-Flowers</p>
-            <p><strong>Tester:</strong> perrywsle</p>
-            <p style="margin-top: 15px; font-size: 0.9em;">
-                Generated automatically by Selenium test suite<br>
-                © 2025 Root Flower - All tests completed successfully
-            </p>
-        </div>
-    </div>
-</body>
-</html>
-`;
-    
-    fs.writeFileSync('test_report.html', htmlContent);
-    console.log('\n✓ Test report generated: test_report.html');
-    console.log(`  Total screenshots: ${screenshots.length}`);
-    console.log(`  Test categories: ${Object.keys(testGroups).length}\n`);
+function toWebPath(fsPath) {
+  // Convert filesystem path to a web-friendly relative path from OUT_FILE location
+  const rel = path.relative(path.dirname(OUT_FILE), fsPath);
+  return rel.split(path.sep).join('/'); // use forward slashes for HTML
 }
 
-generateReport();
+if (!fs.existsSync(SCREENSHOTS_DIR)) {
+  console.error(`Screenshots directory not found: ${SCREENSHOTS_DIR}`);
+  console.error('Please run your tests first so screenshots are available.');
+  process.exit(1);
+}
+
+const files = fs.readdirSync(SCREENSHOTS_DIR, { withFileTypes: true })
+  .filter(d => d.isFile() && /\.(png|jpe?g|gif|webp)$/i.test(d.name))
+  .map(d => d.name)
+  .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
+
+const screenshots = files.map(name => {
+  const full = path.join(SCREENSHOTS_DIR, name);
+  const stats = fs.statSync(full);
+  return {
+    name,
+    full,
+    webPath: toWebPath(full),
+    sizeKB: (stats.size / 1024).toFixed(2),
+    mtime: stats.mtime.toISOString()
+  };
+});
+
+// Grouping convenience (by prefix before first underscore or first hyphen)
+function groupScreenshots(list) {
+  const groups = {};
+  for (const s of list) {
+    // try common prefixes like 'register_', 'enquiry_', etc.
+    const match = s.name.match(/^([a-zA-Z0-9\-]+)[\-_]/);
+    const key = match ? match[1] : 'misc';
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(s);
+  }
+  return groups;
+}
+
+const groups = groupScreenshots(screenshots);
+
+// Minimal HTML escape
+function esc(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+const now = new Date();
+
+const htmlParts = [];
+
+htmlParts.push(`<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Test Report</title>
+<style>
+  body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 0; background: #f4f6f8; color: #222; }
+  .container { max-width: 1200px; margin: 24px auto; background: #fff; border-radius: 8px; box-shadow: 0 6px 30px rgba(0,0,0,0.08); overflow: hidden; }
+  header { padding: 20px 30px; background: linear-gradient(90deg,#2b8aef,#6c63ff); color: #fff; }
+  header h1 { margin: 0; font-size: 20px; }
+  header p { margin: 6px 0 0; font-size: 13px; opacity: 0.9; }
+  .stats { display:flex; gap:12px; padding:16px 24px; flex-wrap:wrap; }
+  .stat { background:#fafafa; padding:10px 14px; border-radius:6px; border:1px solid #eee; font-size:13px; }
+  main { padding: 20px 24px; }
+  .group { margin-bottom: 30px; }
+  .group h2 { margin: 0 0 12px 0; font-size:16px; color:#333; border-bottom:2px solid #e9eef8; padding-bottom:8px; display:flex; align-items:center; gap:10px;}
+  .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:12px; }
+  .card { background:#fff; border-radius:6px; overflow:hidden; border:1px solid #eee; box-shadow:0 6px 16px rgba(11,22,39,0.03); }
+  .card img { width:100%; height:160px; object-fit:cover; display:block; background:#ddd; }
+  .card .meta { padding:8px 10px; display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:12px; color:#555; }
+  footer { background:#fafafa; padding:12px 24px; font-size:12px; color:#666; border-top:1px solid #eee; }
+  .no-screens { padding:20px; color:#666; font-style:italic; }
+  @media (max-width:600px) {
+    .card img { height:120px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Automated Test Report</h1>
+    <p>Generated: ${now.toLocaleString()} — Host: ${esc(os.hostname())} — Node: ${esc(process.version)}</p>
+  </header>
+  <div class="stats">
+    <div class="stat">Screenshots: <strong>${screenshots.length}</strong></div>
+    <div class="stat">Groups: <strong>${Object.keys(groups).length}</strong></div>
+    <div class="stat">Platform: <strong>${esc(os.type())} ${esc(os.release())}</strong></div>
+    <div class="stat">Report: <strong>${esc(path.basename(OUT_FILE))}</strong></div>
+  </div>
+  <main>
+`);
+
+if (screenshots.length === 0) {
+  htmlParts.push(`<div class="no-screens">No screenshots found in ${esc(SCREENSHOTS_DIR)}.</div>`);
+} else {
+  for (const [groupName, items] of Object.entries(groups)) {
+    htmlParts.push(`<div class="group"><h2>${esc(groupName)}</h2><div class="grid">`);
+    for (const item of items) {
+      htmlParts.push(`
+        <div class="card">
+          <a href="${esc(item.webPath)}" target="_blank" rel="noopener">
+            <img src="${esc(item.webPath)}" alt="${esc(item.name)}">
+          </a>
+          <div class="meta">
+            <div>${esc(item.name)}</div>
+            <div>${esc(item.sizeKB)} KB</div>
+          </div>
+        </div>
+      `);
+    }
+    htmlParts.push(`</div></div>`);
+  }
+}
+
+htmlParts.push(`
+  </main>
+  <footer>
+    Report generated by generate_report.js — Screenshots directory: ${esc(SCREENSHOTS_DIR)}
+  </footer>
+</div>
+</body>
+</html>
+`);
+
+// Write out file atomically
+try {
+  fs.writeFileSync(OUT_FILE + '.tmp', htmlParts.join(''), { encoding: 'utf8' });
+  fs.renameSync(OUT_FILE + '.tmp', OUT_FILE);
+  console.log('✓ Test report written to:', OUT_FILE);
+} catch (err) {
+  console.error('✗ Failed to write report:', err);
+  process.exit(2);
+}

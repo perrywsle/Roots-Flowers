@@ -1,194 +1,145 @@
-const { Builder, By, until, Key } = require('selenium-webdriver');
-const firefox = require('selenium-webdriver/firefox');
+const { Builder, By, until } = require('selenium-webdriver');
 const fs = require('fs');
+const path = require('path');
+const { getFileUrl, SCREENSHOT_DIR } = require('./selenium-utils');
 
-async function takeScreenshot(driver, filename) {
-    await driver.sleep(300);
-    let image = await driver.takeScreenshot();
-    fs.writeFileSync(`screenshots/${filename}`, image, 'base64');
-    console.log(`  📸 Screenshot saved: screenshots/${filename}`);
+function takeScreenshot(driver, filename) {
+  return driver.takeScreenshot().then(data => {
+    const out = path.join(SCREENSHOT_DIR, filename);
+    fs.writeFileSync(out, data, 'base64');
+    console.log('Saved screenshot:', out);
+  });
 }
 
-async function testRegisterForm() {
-    let options = new firefox.Options();
-    let driver = await new Builder()
-        .forBrowser('firefox')
-        .setFirefoxOptions(options)
-        .build();
-    
+async function findVisible(elements) {
+  const visible = [];
+  for (const el of elements) {
     try {
-        console.log('\n=== Testing Register Form ===');
-        
-        await driver.get('file:///home/perry/COS10005/assign1/register.html');
-        await driver.sleep(1000);
-        
-        await takeScreenshot(driver, 'register_initial.png');
-        console.log('✓ Register page loaded');
-        
-        // Test 1: Submit empty form
-        console.log('\n--- Test 1: Empty Form Submission ---');
-        try {
-            let submitBtn = await driver.findElement(By.css('input[type="submit"], button[type="submit"]'));
-            await driver.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", submitBtn);
-            await driver.sleep(500);
-            await takeScreenshot(driver, 'register_before_submit.png');
-            
-            await driver.executeScript("arguments[0].click();", submitBtn);
-            await driver.sleep(1500);
-            
-            try {
-                let alert = await driver.switchTo().alert();
-                let alertText = await alert.getText();
-                console.log(`✓ Alert detected: "${alertText}"`);
-                await takeScreenshot(driver, 'register_empty_alert.png');
-                await alert.accept();
-                console.log('✓ Alert accepted');
-            } catch (e) {
-                console.log('⚠ No alert - form might use HTML5 validation');
-                await takeScreenshot(driver, 'register_empty_validation.png');
-            }
-        } catch (e) {
-            console.log(`⚠ Submit button test failed: ${e.message}`);
-        }
-        
-        await driver.sleep(500);
-        
-        // Test 2: Fill form with valid data
-        console.log('\n--- Test 2: Valid Form Data ---');
-        
-        await driver.executeScript('window.scrollTo(0, 0);');
-        await driver.sleep(500);
-        
-        const formData = {
-            'email': 'john.doe@example.com',
-            'phone': '0412345678',
-            'city': 'Melbourne',
-            'postcode': '3000'
-        };
-        
-        for (let [name, value] of Object.entries(formData)) {
-            try {
-                let field = await driver.findElement(By.name(name));
-                await driver.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", field);
-                await driver.sleep(300);
-                
-                await driver.executeScript("arguments[0].style.border='3px solid blue'", field);
-                await driver.sleep(200);
-                
-                await field.clear();
-                await field.sendKeys(value);
-                await driver.sleep(300);
-                
-                let currentValue = await field.getAttribute('value');
-                console.log(`✓ Filled ${name}: ${currentValue}`);
-                
-                await driver.executeScript("arguments[0].style.border=''", field);
-                
-            } catch (e) {
-                console.log(`⚠ Field '${name}' not found`);
-            }
-        }
-        
-        await driver.sleep(1000);
-        await driver.executeScript('window.scrollTo(0, document.body.scrollHeight / 2);');
-        await driver.sleep(500);
-        
-        await takeScreenshot(driver, 'register_filled.png');
-        console.log('✓ Screenshot taken of filled form');
-        
-        // Test radio buttons
-        console.log('\n--- Testing Radio Buttons ---');
-        try {
-            let radios = await driver.findElements(By.css('input[type="radio"]'));
-            if (radios.length > 0) {
-                await driver.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", radios[0]);
-                await driver.sleep(300);
-                await driver.executeScript("arguments[0].click();", radios[0]);
-                await driver.sleep(300);
-                console.log(`✓ Selected radio button (found ${radios.length} options)`);
-                await takeScreenshot(driver, 'register_with_radio.png');
-            }
-        } catch (e) {
-            console.log('⚠ No radio buttons found');
-        }
-        
-        // Test checkboxes
-        console.log('\n--- Testing Checkboxes ---');
-        try {
-            let checkboxes = await driver.findElements(By.css('input[type="checkbox"]'));
-            if (checkboxes.length > 0) {
-                await driver.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", checkboxes[0]);
-                await driver.sleep(300);
-                await driver.executeScript("arguments[0].click();", checkboxes[0]);
-                await driver.sleep(300);
-                console.log(`✓ Checked checkbox (found ${checkboxes.length} options)`);
-                await takeScreenshot(driver, 'register_with_selections.png');
-            }
-        } catch (e) {
-            console.log('⚠ No checkboxes found');
-        }
-        
-        // Test dropdown/select
-        console.log('\n--- Testing Select/Dropdown ---');
-        try {
-            let selects = await driver.findElements(By.css('select'));
-            if (selects.length > 0) {
-                await driver.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", selects[0]);
-                await driver.sleep(300);
-                
-                let options = await selects[0].findElements(By.css('option'));
-                if (options.length > 1) {
-                    await options[1].click();
-                    await driver.sleep(300);
-                    console.log(`✓ Selected dropdown option`);
-                    await takeScreenshot(driver, 'register_with_dropdown.png');
-                }
-            }
-        } catch (e) {
-            console.log('⚠ No select elements found');
-        }
-        
-        // Test 3: Test invalid email format
-        console.log('\n--- Test 3: Invalid Email ---');
-        try {
-            let emailField = await driver.findElement(By.name('email'));
-            await driver.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", emailField);
-            await driver.sleep(300);
-            
-            await emailField.clear();
-            await emailField.sendKeys('invalid-email');
-            await driver.sleep(500);
-            
-            await takeScreenshot(driver, 'register_invalid_email.png');
-            
-            let submitBtn = await driver.findElement(By.css('input[type="submit"], button[type="submit"]'));
-            await driver.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", submitBtn);
-            await driver.sleep(300);
-            await driver.executeScript("arguments[0].click();", submitBtn);
-            await driver.sleep(1000);
-            
-            try {
-                let alert = await driver.switchTo().alert();
-                let alertText = await alert.getText();
-                console.log(`✓ Alert for invalid email: "${alertText}"`);
-                await takeScreenshot(driver, 'register_invalid_email_alert.png');
-                await alert.accept();
-            } catch (e) {
-                console.log('✓ HTML5 validation prevented submission');
-                await takeScreenshot(driver, 'register_invalid_email_validation.png');
-            }
-        } catch (e) {
-            console.log('⚠ Could not test email validation');
-        }
-        
-        console.log('\n✓ Register form test completed!\n');
-        
-    } catch (error) {
-        console.error('✗ Test failed:', error);
-        await takeScreenshot(driver, 'register_error.png');
-    } finally {
-        await driver.quit();
-    }
+      if (await el.isDisplayed()) visible.push(el);
+    } catch {}
+  }
+  return visible;
 }
 
-testRegisterForm();
+(async function registerTest() {
+  const browser = (process.env.BROWSER || 'chrome').toLowerCase();
+  let driver;
+  try {
+    driver = await new Builder().forBrowser(browser).build();
+    const url = getFileUrl('register.html');
+    console.log('Loading:', url);
+    await driver.get(url);
+    await driver.sleep(800);
+
+    await takeScreenshot(driver, 'register_initial.png');
+
+    // Try filling common fields
+    const fields = {
+      email: 'selenium@test.com',
+      phone: '0412345678',
+      city: 'Melbourne',
+      postcode: '3000'
+    };
+
+    for (const [name, value] of Object.entries(fields)) {
+      try {
+        const els = await driver.findElements(By.name(name));
+        if (els.length > 0) {
+          await els[0].clear();
+          await els[0].sendKeys(value);
+          console.log(`Filled ${name}`);
+        } else {
+          console.log(`Field not found: ${name}`);
+        }
+      } catch (e) {
+        console.log(`Error filling ${name}:`, e.message);
+      }
+    }
+
+    await driver.sleep(400);
+    await takeScreenshot(driver, 'register_filled.png');
+
+    // Radio buttons
+    try {
+      const radios = await driver.findElements(By.css('input[type="radio"]'));
+      const visibleRadios = await findVisible(radios);
+      if (visibleRadios.length > 0) {
+        await visibleRadios[0].click();
+        console.log('Selected radio button');
+        await takeScreenshot(driver, 'register_radio_selected.png');
+      } else {
+        console.log('No visible radios to select');
+      }
+    } catch (e) {
+      console.log('Radio error:', e.message);
+    }
+
+    // Checkboxes
+    try {
+      const boxes = await driver.findElements(By.css('input[type="checkbox"]'));
+      const visibleBoxes = await findVisible(boxes);
+      if (visibleBoxes.length > 0) {
+        await visibleBoxes[0].click();
+        console.log('Checked first visible checkbox');
+        await takeScreenshot(driver, 'register_checkbox.png');
+      } else {
+        console.log('No visible checkboxes found');
+      }
+    } catch (e) {
+      console.log('Checkbox error:', e.message);
+    }
+
+    // Select (dropdown) - choose first non-disabled option if exists
+    try {
+      const selects = await driver.findElements(By.css('select'));
+      if (selects.length > 0) {
+        const options = await selects[0].findElements(By.css('option'));
+        for (const opt of options) {
+          const val = await opt.getAttribute('value');
+          const disabled = await opt.getAttribute('disabled');
+          if (val && !disabled) {
+            await opt.click();
+            console.log('Selected dropdown option');
+            break;
+          }
+        }
+        await takeScreenshot(driver, 'register_dropdown.png');
+      }
+    } catch (e) {
+      console.log('Select error:', e.message);
+    }
+
+    // Invalid email test
+    try {
+      const emailEls = await driver.findElements(By.name('email'));
+      if (emailEls.length > 0) {
+        await emailEls[0].clear();
+        await emailEls[0].sendKeys('invalid-email');
+        await driver.sleep(300);
+        await takeScreenshot(driver, 'register_invalid_email.png');
+
+        // try submit
+        const submit = await driver.findElements(By.css('input[type="submit"], button[type="submit"]'));
+        if (submit.length > 0) {
+          await submit[0].click().catch(() => {});
+          try {
+            await driver.wait(until.alertIsPresent(), 1500);
+            const alert = await driver.switchTo().alert();
+            console.log('Alert on invalid email:', await alert.getText());
+            await takeScreenshot(driver, 'register_invalid_email_alert.png');
+            await alert.accept();
+          } catch {
+            console.log('No JS alert after invalid email submit (HTML5 validation likely)');
+            await takeScreenshot(driver, 'register_invalid_email_validation.png');
+          }
+        }
+      }
+    } catch (e) {
+      console.log('Invalid email test error:', e.message);
+    }
+  } catch (err) {
+    console.error('Register test error:', err);
+  } finally {
+    if (driver) await driver.quit();
+  }
+})();

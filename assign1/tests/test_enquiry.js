@@ -1,98 +1,122 @@
-const { Builder, By, until } = require('selenium-webdriver');
-const firefox = require('selenium-webdriver/firefox');
+const { Builder, By, until, Key } = require('selenium-webdriver');
 const fs = require('fs');
+const path = require('path');
+const { getFileUrl, SCREENSHOT_DIR } = require('./selenium-utils');
 
-async function takeScreenshot(driver, filename) {
-    await driver.sleep(300);
-    let image = await driver.takeScreenshot();
-    fs.writeFileSync(`screenshots/${filename}`, image, 'base64');
-    console.log(`  📸 Screenshot saved: screenshots/${filename}`);
+function takeScreenshot(driver, filename) {
+  return driver.takeScreenshot().then(data => {
+    const out = path.join(SCREENSHOT_DIR, filename);
+    fs.writeFileSync(out, data, 'base64');
+    console.log('Saved screenshot:', out);
+  });
 }
 
-async function testEnquiryForm() {
-    let options = new firefox.Options();
-    let driver = await new Builder()
-        .forBrowser('firefox')
-        .setFirefoxOptions(options)
-        .build();
-    
+async function safeFind(driver, locator, timeout = 2000) {
+  try {
+    await driver.wait(until.elementLocated(locator), timeout);
+    const el = await driver.findElement(locator);
+    return el;
+  } catch {
+    return null;
+  }
+}
+
+(async function enquiryTest() {
+  const browser = (process.env.BROWSER || 'chrome').toLowerCase();
+  let driver;
+  try {
+    driver = await new Builder().forBrowser(browser).build();
+    const url = getFileUrl('enquiry.html');
+    console.log('Loading:', url);
+    await driver.get(url);
+    await driver.sleep(800);
+
+    // Initial screenshot
+    await takeScreenshot(driver, 'enquiry_initial.png');
+
+    // Try click submit to trigger JS alert or HTML5 validation
     try {
-        console.log('\n=== Testing Enquiry Form ===');
-        
-        await driver.get('file:///home/perry/COS10005/assign1/enquiry.html');
-        await driver.sleep(1000);
-        
-        await takeScreenshot(driver, 'enquiry_initial.png');
-        
-        // Test empty form submission
-        console.log('\n--- Test: Empty Form Alert ---');
+      const submit = await safeFind(driver, By.css('input[type="submit"], button[type="submit"]'));
+      if (submit) {
+        await submit.click().catch(() => {});
+        // wait briefly for an alert
         try {
-            let submitBtn = await driver.findElement(By.css('input[type="submit"], button[type="submit"]'));
-            await submitBtn.click();
-            await driver.sleep(1000);
-            
-            try {
-                let alert = await driver.switchTo().alert();
-                let alertText = await alert.getText();
-                console.log(`✓ Alert triggered: "${alertText}"`);
-                await takeScreenshot(driver, 'enquiry_empty_alert.png');
-                await alert.accept();
-                console.log('✓ Alert accepted');
-            } catch (e) {
-                console.log('⚠ No JavaScript alert - using HTML5 validation');
-                await takeScreenshot(driver, 'enquiry_html5_validation.png');
-            }
-        } catch (e) {
-            console.log('⚠ Submit button not found');
+          await driver.wait(until.alertIsPresent(), 1500);
+          const alert = await driver.switchTo().alert();
+          console.log('Alert text:', await alert.getText());
+          await takeScreenshot(driver, 'enquiry_empty_alert.png');
+          await alert.accept();
+        } catch {
+          console.log('No JS alert on empty submit (HTML5 validation likely)');
+          await takeScreenshot(driver, 'enquiry_empty_validation.png');
         }
-        
-        await driver.sleep(500);
-        
-        // Fill the form
-        console.log('\n--- Test: Fill Enquiry Form ---');
-        const enquiryData = {
-            'firstname': 'Jane',
-            'lastname': 'Smith',
-            'email': 'jane.smith@example.com',
-            'phone': '0498765432',
-            'subject': 'Product Enquiry'
-        };
-        
-        for (let [name, value] of Object.entries(enquiryData)) {
-            try {
-                let field = await driver.findElement(By.name(name));
-                await field.clear();
-                await field.sendKeys(value);
-                console.log(`✓ Filled ${name}`);
-                await driver.sleep(200);
-            } catch (e) {
-                console.log(`⚠ Field '${name}' not found`);
-            }
-        }
-        
-        await takeScreenshot(driver, 'enquiry_filled.png');
-        
-        // Test textarea if exists
-        try {
-            let textareas = await driver.findElements(By.css('textarea'));
-            if (textareas.length > 0) {
-                await textareas[0].clear();
-                await textareas[0].sendKeys('This is a detailed enquiry message with multiple lines.\nSecond line of the message.\nThird line for testing.');
-                console.log('✓ Filled textarea with multi-line content');
-                await takeScreenshot(driver, 'enquiry_with_textarea.png');
-            }
-        } catch (e) {
-            console.log('⚠ No textarea found');
-        }
-        
-        console.log('\n✓ Enquiry form test completed!\n');
-        
-    } catch (error) {
-        console.error('✗ Test failed:', error);
-        await takeScreenshot(driver, 'enquiry_error.png');
-    } finally {
-        await driver.quit();
+      } else {
+        console.log('Submit button not found');
+      }
+    } catch (e) {
+      console.log('Submit attempt error:', e.message);
     }
-}
 
-testEnquiryForm();
+    // Fill form fields (adjust names if your form differs)
+    const fields = {
+      firstname: 'Jane',
+      lastname: 'Smith',
+      email: 'jane.smith@example.com',
+      phone: '0498765432',
+      subject: 'Product Enquiry'
+    };
+
+    for (const [name, value] of Object.entries(fields)) {
+      try {
+        const el = await safeFind(driver, By.name(name), 1000);
+        if (el) {
+          await el.clear();
+          await el.sendKeys(value);
+          console.log(`Filled ${name}`);
+        } else {
+          console.log(`Field not found: ${name}`);
+        }
+      } catch (e) {
+        console.log(`Error filling ${name}:`, e.message);
+      }
+    }
+
+    // textarea
+    try {
+      const textarea = await driver.findElements(By.css('textarea'));
+      if (textarea.length > 0) {
+        await textarea[0].clear();
+        await textarea[0].sendKeys('This is a test enquiry.\nThanks.');
+        console.log('Textarea filled');
+      }
+    } catch (e) {}
+
+    await driver.sleep(500);
+    await takeScreenshot(driver, 'enquiry_filled.png');
+
+    // Try final submit
+    try {
+      const submit = await safeFind(driver, By.css('input[type="submit"], button[type="submit"]'));
+      if (submit) {
+        await submit.click().catch(() => {});
+        // capture alert or wait for page change briefly
+        try {
+          await driver.wait(until.alertIsPresent(), 1500);
+          const alert = await driver.switchTo().alert();
+          console.log('Submit alert:', await alert.getText());
+          await takeScreenshot(driver, 'enquiry_submit_alert.png');
+          await alert.accept();
+        } catch {
+          console.log('No JS alert on submit (may have navigated or used form action)');
+          await takeScreenshot(driver, 'enquiry_after_submit.png');
+        }
+      }
+    } catch (e) {
+      console.log('Final submit error:', e.message);
+    }
+  } catch (err) {
+    console.error('Enquiry test error:', err);
+  } finally {
+    if (driver) await driver.quit();
+  }
+})();

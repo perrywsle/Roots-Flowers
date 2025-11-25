@@ -1,18 +1,12 @@
 {
-  "name": "tests",
+  "name": "selenium-tests",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:homepage": "node test_homepage.js",
+    "test:register": "node test_register.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "chromedriver": "^142.0.3",
-    "geckodriver": "^6.1.0",
     "selenium-webdriver": "^4.38.0"
   }
 }

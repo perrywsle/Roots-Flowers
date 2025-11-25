@@ -1,57 +1,35 @@
-const { Builder, By, until } = require('selenium-webdriver');
-const firefox = require('selenium-webdriver/firefox');
+const { Builder, By } = require('selenium-webdriver');
 const fs = require('fs');
+const path = require('path');
+const { getFileUrl, SCREENSHOT_DIR } = require('./selenium-utils');
 
-async function takeScreenshot(driver, filename) {
-    await driver.sleep(300);
-    let image = await driver.takeScreenshot();
-    fs.writeFileSync(`screenshots/${filename}`, image, 'base64');
-    console.log(`  📸 Screenshot saved: screenshots/${filename}`);
-}
+(async function homepage() {
+  // Browser choice via env var BROWSER=firefox|chrome (default chrome)
+  const browser = (process.env.BROWSER || 'chrome').toLowerCase();
+  const headless = process.env.HEADLESS === '1' || process.env.HEADLESS === 'true';
 
-async function testHomepage() {
-    let options = new firefox.Options();
-    // Uncomment next line for headless mode (no GUI)
-    // options.addArguments('-headless');
-    
-    let driver = await new Builder()
-        .forBrowser('firefox')
-        .setFirefoxOptions(options)
-        .build();
-    
+  let builder = new Builder().forBrowser(browser);
+
+  // optional: set headless for chrome via ChromeOptions if needed
+  try {
+    const driver = await builder.build();
     try {
-        console.log('\n=== Testing Homepage ===');
-        
-        await driver.get('file:///home/perry/COS10005/assign1/index.html');
-        await driver.sleep(1000);
-        
-        await takeScreenshot(driver, 'homepage_initial.png');
-        
-        let title = await driver.getTitle();
-        console.log(`✓ Page title: ${title}`);
-        
-        let links = await driver.findElements(By.css('a'));
-        console.log(`✓ Found ${links.length} links on the page`);
-        
-        try {
-            let nav = await driver.findElement(By.css('nav'));
-            console.log('✓ Navigation menu found');
-        } catch (e) {
-            console.log('⚠ No nav element found (might use different structure)');
-        }
-        
-        await driver.executeScript('window.scrollTo(0, document.body.scrollHeight/2);');
-        await driver.sleep(500);
-        await takeScreenshot(driver, 'homepage_scrolled.png');
-        
-        console.log('✓ Homepage test passed!\n');
-        
-    } catch (error) {
-        console.error('✗ Test failed:', error);
-        await takeScreenshot(driver, 'homepage_error.png');
-    } finally {
-        await driver.quit();
-    }
-}
+      const url = getFileUrl('index.html');
+      console.log('Loading:', url);
+      await driver.get(url);
 
-testHomepage();
+      await driver.sleep(1000);
+      const title = await driver.getTitle();
+      console.log('Title:', title);
+
+      const img = await driver.takeScreenshot();
+      const outPath = path.join(SCREENSHOT_DIR, 'selenium_homepage.png');
+      fs.writeFileSync(outPath, img, 'base64');
+      console.log('Saved screenshot:', outPath);
+    } finally {
+      await driver.quit();
+    }
+  } catch (err) {
+    console.error('Selenium error:', err);
+  }
+})();

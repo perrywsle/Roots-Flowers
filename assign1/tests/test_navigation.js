@@ -1,58 +1,60 @@
-const { Builder, By } = require('selenium-webdriver');
-const firefox = require('selenium-webdriver/firefox');
+const { Builder, By, until } = require('selenium-webdriver');
 const fs = require('fs');
+const path = require('path');
+const { getFileUrl, SCREENSHOT_DIR } = require('./selenium-utils');
 
-async function takeScreenshot(driver, filename) {
-    await driver.sleep(300);
-    let image = await driver.takeScreenshot();
-    fs.writeFileSync(`screenshots/${filename}`, image, 'base64');
-    console.log(`  📸 Screenshot saved: screenshots/${filename}`);
+function takeScreenshot(driver, filename) {
+  return driver.takeScreenshot().then(data => {
+    const out = path.join(SCREENSHOT_DIR, filename);
+    fs.writeFileSync(out, data, 'base64');
+    console.log('Saved screenshot:', out);
+  });
 }
 
-async function testNavigation() {
-    let options = new firefox.Options();
-    let driver = await new Builder()
-        .forBrowser('firefox')
-        .setFirefoxOptions(options)
-        .build();
-    
-    try {
-        console.log('\n=== Testing Navigation ===');
-        const baseUrl = 'file:///home/perry/COS10005/assign1/';
-        
-        const pages = [
-            { file: 'index.html', name: 'Homepage' },
-            { file: 'product1.html', name: 'Product 1' },
-            { file: 'product2.html', name: 'Product 2' },
-            { file: 'enquiry.html', name: 'Enquiry' },
-            { file: 'register.html', name: 'Register' },
-            { file: 'profile.html', name: 'Profile' },
-            { file: 'enhancement.html', name: 'Enhancement' },
-            { file: 'enhancement2.html', name: 'Enhancement 2' },
-            { file: 'promotion.html', name: 'Promotion' },
-            { file: 'workshop.html', name: 'Workshop' },
-            { file: 'acknowledgement.html', name: 'Acknowledgement' }
-        ];
-        
-        for (let page of pages) {
-            await driver.get(baseUrl + page.file);
-            await driver.sleep(800);
-            
-            let title = await driver.getTitle();
-            console.log(`✓ ${page.name} (${page.file}) - Title: ${title}`);
-            
-            let screenshotName = page.file.replace('.html', '.png');
-            await takeScreenshot(driver, screenshotName);
-        }
-        
-        console.log('\n✓ All pages loaded successfully!\n');
-        
-    } catch (error) {
-        console.error('✗ Navigation test failed:', error);
-        await takeScreenshot(driver, 'navigation_error.png');
-    } finally {
-        await driver.quit();
+(async function navigationTest() {
+  const browser = (process.env.BROWSER || 'chrome').toLowerCase();
+  console.log('Browser:', browser);
+  const pages = [
+    { file: 'index.html', name: 'Homepage' },
+    { file: 'product1.html', name: 'Product 1' },
+    { file: 'product2.html', name: 'Product 2' },
+    { file: 'enquiry.html', name: 'Enquiry' },
+    { file: 'register.html', name: 'Register' },
+    { file: 'profile.html', name: 'Profile' },
+    { file: 'enhancement.html', name: 'Enhancement' },
+    { file: 'enhancement2.html', name: 'Enhancement 2' },
+    { file: 'promotion.html', name: 'Promotion' },
+    { file: 'workshop.html', name: 'Workshop' },
+    { file: 'acknowledgement.html', name: 'Acknowledgement' }
+  ];
+
+  let driver;
+  try {
+    driver = await new Builder().forBrowser(browser).build();
+
+    for (const p of pages) {
+      try {
+        const url = getFileUrl(p.file);
+        console.log(`Loading ${p.name}: ${url}`);
+        await driver.get(url);
+
+        // wait for title or body
+        await driver.wait(until.elementLocated(By.css('body')), 5000).catch(() => {});
+        await driver.sleep(700);
+
+        const title = await driver.getTitle();
+        console.log(`Title: ${title}`);
+
+        const screenshotName = `${p.file.replace('.html', '')}.png`;
+        await takeScreenshot(driver, screenshotName);
+      } catch (err) {
+        console.error(`Error on ${p.name}:`, err.message);
+        await takeScreenshot(driver, `error_${p.file.replace('.html','')}.png`);
+      }
     }
-}
-
-testNavigation();
+  } catch (err) {
+    console.error('Navigation test error:', err);
+  } finally {
+    if (driver) await driver.quit();
+  }
+})();
