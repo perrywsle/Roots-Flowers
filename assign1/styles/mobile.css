@@ -41,13 +41,19 @@
     .hamburger {
         display: flex;
         position: fixed;
-        right: 2rem;
-        top: 1.5rem;
+        right: 1.2rem;
+        top: 1.2rem;
+        width: 32px;
+        height: 26px;
+        padding: 4px;
     }
-    
+
+    .hamburger-line {
+        height: 3px;
+    }
+
     .menu-toggle:checked + .hamburger {
-        right: calc(25% - 50px);
-        position: fixed;
+        right: 1.2rem;
     }
     
     .nav-menu {
@@ -445,6 +451,18 @@
 @media (max-width: 768px) {
     body {
         font-size: 1.2rem;
+    }
+
+    .hamburger {
+        width: 30px;
+        height: 24px;
+        right: 1rem;
+        top: 1rem;
+        padding: 3px;
+    }
+
+    .hamburger-line {
+        height: 3px;
     }
 
     .btn-float {
@@ -1143,6 +1161,18 @@
 @media (max-width: 480px) {
     body {
         font-size: 1.1rem;
+    }
+
+    .hamburger {
+        width: 26px;
+        height: 22px;
+        right: 0.8rem;
+        top: 0.8rem;
+        padding: 2px;
+    }
+
+    .hamburger-line {
+        height: 2.5px;
     }
 
     .nav-menu {
