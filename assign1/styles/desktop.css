@@ -518,8 +518,7 @@ footer,
 }
 
 .clock-date {
-    font-size: 0.65rem;
-    /* REMOVE THIS LINE: margin-bottom: 0.15rem; */
+    font-size: 1rem;
     color: #a8d5ba;
 }
 
